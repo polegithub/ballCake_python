@@ -10,13 +10,15 @@ sys.setdefaultencoding( "utf-8" )
 class SearchData:
 
     def __init__(self):
+        print ('searchData-init')
         pass
 
     def search(self):
-        f = open('howtoTucao.txt','w')     #打开文件#
-        # f.write("No Answer")
+        print('start to search')
+        f = open('data/howtoTucao.txt','w')     #打开文件#
+        f.write("No Answer")
 
-        for pagenum in range(1,21):        #从第1页爬到第20页
+        for pagenum in range(1,11):        #从第1页爬到第11页
              strpagenum = str(pagenum)      #页数的str表示
              print "Getting data for Page " + strpagenum   #shell里面显示的，表示已爬到多少页
              url = "http://www.zhihu.com/collection/27109279?page="+strpagenum  #网址

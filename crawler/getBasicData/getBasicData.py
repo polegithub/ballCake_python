@@ -1,7 +1,7 @@
 #coding=utf-8
 
 import urllib2
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 import sys
 reload(sys)
@@ -31,8 +31,8 @@ class SearchData:
           #print type(each.string)
           #print each.name
             if each.name == 'h2' :      #如果Tag为h2类型，说明是问题
-                print each.a.string     #问题中还有一个<a..>，所以要each.a.string取出内容
-                if each.a.string:       #如果非空，才能写入
+                #print each.a.string     #问题中还有一个<a..>，所以要each.a.string取出内容
+                if (each.a and each.a.string):       #如果非空，才能写入
                     f.write(each.a.string)
                 else :                  #否则写"No Answer"
                     f.write("No Answer")

@@ -26,6 +26,7 @@ class SearchData:
              # print(soup)
              print('打印soup')
 
+
     #找到具有class属性为下面两个的所有Tag
         # ALL = soup.findAll(attrs = {'class' : ['zm-item-title','zh-summary summary clearfix'] })
         ALL = soup.findAll(attrs = {'class' : 'zm-item'})
@@ -47,6 +48,7 @@ class SearchData:
 
             number = number+1
 
+
         f.close()                           #关闭文件
 
             # if each.name == 'h2' :      #如果Tag为h2类型，说明是问题
@@ -66,9 +68,6 @@ class SearchData:
             #         f.write(each.string)
             #     else :
             #         f.write("No Answer"+'\n')
-
-
-
 
 
 

@@ -24,7 +24,6 @@ class SearchData:
              page = urllib2.urlopen(url)     #打开网页
              soup = BeautifulSoup(page)      #用BeautifulSoup解析网页
              # print(soup)
-             print('打印soup')
 
 
     #找到具有class属性为下面两个的所有Tag

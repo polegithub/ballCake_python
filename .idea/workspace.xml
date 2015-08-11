@@ -39,6 +39,7 @@
         <entry file="file://$PROJECT_DIR$/crawler/getBasicData/getBasicData.py">
           <provider selected="true" editor-type-id="text-editor">
 <<<<<<< HEAD
+<<<<<<< HEAD
             <state vertical-scroll-proportion="0.50151974">
               <caret line="30" column="26" selection-start-line="30" selection-start-column="14" selection-end-line="30" selection-end-column="26" />
               <folding>
@@ -47,6 +48,10 @@
 =======
             <state vertical-scroll-proportion="0.5376712">
               <caret line="58" column="29" selection-start-line="58" selection-start-column="19" selection-end-line="58" selection-end-column="29" />
+=======
+            <state vertical-scroll-proportion="0.22945206">
+              <caret line="47" column="22" selection-start-line="47" selection-start-column="8" selection-end-line="47" selection-end-column="22" />
+>>>>>>> commit .idea/workspace.xml
               <folding />
 >>>>>>> 增加getSoupWithUrl方法，专门处理url和get soup
             </state>
@@ -343,10 +348,14 @@
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1280" height="728" extended-state="0" />
 <<<<<<< HEAD
+<<<<<<< HEAD
     <editor active="true" />
 =======
     <editor active="false" />
 >>>>>>> 增加getSoupWithUrl方法，专门处理url和get soup
+=======
+    <editor active="true" />
+>>>>>>> commit .idea/workspace.xml
     <layout>
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3291536" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3291536" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -361,8 +370,12 @@
 =======
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.47648904" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3291536" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+<<<<<<< HEAD
       <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.45611286" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
 >>>>>>> 增加getSoupWithUrl方法，专门处理url和get soup
+=======
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.45611286" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+>>>>>>> commit .idea/workspace.xml
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3291536" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -534,6 +547,7 @@
     <entry file="file://$PROJECT_DIR$/crawler/getBasicData/getBasicData.py">
       <provider selected="true" editor-type-id="text-editor">
 <<<<<<< HEAD
+<<<<<<< HEAD
         <state vertical-scroll-proportion="0.50151974">
           <caret line="30" column="26" selection-start-line="30" selection-start-column="14" selection-end-line="30" selection-end-column="26" />
           <folding>
@@ -542,6 +556,10 @@
 =======
         <state vertical-scroll-proportion="0.5376712">
           <caret line="58" column="29" selection-start-line="58" selection-start-column="19" selection-end-line="58" selection-end-column="29" />
+=======
+        <state vertical-scroll-proportion="0.22945206">
+          <caret line="47" column="22" selection-start-line="47" selection-start-column="8" selection-end-line="47" selection-end-column="22" />
+>>>>>>> commit .idea/workspace.xml
           <folding />
 >>>>>>> 增加getSoupWithUrl方法，专门处理url和get soup
         </state>

@@ -50,26 +50,21 @@ class SearchData:
 
         f.close()                           #关闭文件
 
-            # if each.name == 'h2' :      #如果Tag为h2类型，说明是问题
-            #     #print each.a.string     #问题中还有一个<a..>，所以要each.a.string取出内容
-            #     if (each.a and each.a.string) :       #如果非空，才能写入
-            #         each.a.string = each.a.string + '\n'
-            #         # print each.a.string     #问题中还有一个<a..>，所以要each.a.string取出内容
-            #
-            #         f.write(each.a.string)
-            #     else :                  #否则写"No Answer"
-            #         f.write("No Answer+ '\n'")
-            # else :                      #如果是回答，同样写入
-            #     print each.string
-            #
-            #     if each.string:
-            #         print('答案：')
-            #         f.write(each.string)
-            #     else :
-            #         f.write("No Answer"+'\n')
 
+    def searchUrlByPage(self,url,pageMin,pageMax):
+        if url:
+            if pageMax>pageMin and pageMin>=0:
+                for pagenum in range(pageMin,pageMax):
+                    strpagenum = str(pagenum)      #页数的str表示
+                    print "Getting data for Page " + strpagenum   #shell里面显示的，表示已爬到多少页
+                    url = url + strpagenum  #网址
+                    page = urllib2.urlopen(url)     #打开网页
+                    soup = BeautifulSoup(page)      #用BeautifulSoup解析网页
 
+                    if soup:
+                        return soup
 
+        return None
 
 
 # def getHtml(url):

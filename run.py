@@ -3,7 +3,8 @@ import urllib
 import re
 
 
-from crawler.getBasicData.getBasicData import SearchData
+from crawler.getBasicData.getTianYaData import SearchData
+# from crawler.getBasicData.getZhihuData import SearchData
 
 
 print('Let us begin')

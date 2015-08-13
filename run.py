@@ -5,7 +5,7 @@ import re
 
 from crawler.getBasicData.getTianYaData import SearchData
 # from crawler.getBasicData.getZhihuData import SearchData
-
+# from crawler.getBasicData.getBasicDataFromDouban import SearchData
 
 print('Let us begin')
 

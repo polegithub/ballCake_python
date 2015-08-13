@@ -1,4 +1,6 @@
 
+## polen MAC: mysql：  user="root",passwd=""
+## chunke :mysql: you change it as your local computer
 
 # 如下仅作常用查询使用
 

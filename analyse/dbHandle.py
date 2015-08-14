@@ -9,7 +9,7 @@ import MySQLdb
 #localhost = 127.0.0.1
 
 
-def do_init_db():
+def do_init_db(dbType):
 
     conn=MySQLdb.connect(host="127.0.0.1",user="root",passwd="",db="mysql",charset="utf8")
     curs = conn.cursor()
@@ -29,17 +29,19 @@ def do_init_db():
     #         print r
 
     # create a table named addfields
-    try:
-        curs.execute('create table douban_book(id int PRIMARY KEY NOT NULL,bookName text,score text,scoedNum int)')
-    except:
-        print('The table douban_book success!')
+    if dbType == 'douban':
+        try:
+                curs.execute('create table douban_book(id int PRIMARY KEY NOT NULL,bookName text,score text,scoedNum int)')
+        except:
+                print('The table douban_book success!')
 
-    try:
-        # sql = "alter table douban_book add (publisher text,author text,publishTime text,price text)"
-        sql = "alter table douban_book add (price text)"
-        curs.execute(sql)
-    except:
-        print('add keys for douban')
+        try:
+                # sql = "alter table douban_book add (publisher text,author text,publishTime text,price text)"
+                sql = "alter table douban_book add (price text)"
+                curs.execute(sql)
+        except:
+                print('add keys for douban')
+
 
 
     # add the fileds
@@ -64,3 +66,7 @@ def do_init_db():
     conn.commit()
     curs.close()
     conn.close()
+
+
+
+

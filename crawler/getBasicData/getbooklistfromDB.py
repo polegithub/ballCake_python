@@ -9,12 +9,27 @@ import numpy as np
 from bs4 import BeautifulSoup
 from openpyxl import Workbook
 
+from crawler.directory.directoryManager import contentClass
+from  analyse.dbHandle import do_init_db
+
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+BOOk_TYPE = 1
+
+def startSearchBoook():
+    #book_tag_lists = ['心理','判断与决策','算法','数据结构','经济','历史']
+    #book_tag_lists = ['传记','哲学','编程','创业','理财','社会学','佛教']
+    #book_tag_lists=['思想','科技','科学','web','股票','爱情','两性']
+    # book_tag_lists=['计算机','机器学习','linux','android','数据库','互联网']
+    book_tag_lists=['计算机']
+
+    book_lists=do_spider(book_tag_lists)
+    print_book_lists_excel(book_lists,book_tag_lists)
+
 
 def book_spider(book_tag):
-    page_num=0;
+    page_num=0
     count=1
     book_list=[]
     try_times=0
@@ -24,7 +39,7 @@ def book_spider(book_tag):
          {'User-Agent':'Mozilla/5.0 (Windows NT 6.2) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.12 Safari/535.11'},\
          {'User-Agent': 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)'}]
          
-    while(1):
+    while(page_num < 2):
         url="http://www.douban.com/tag/"+urllib.quote(book_tag)+"/book?start="+str(page_num*15)
         time.sleep(np.random.rand()*2)
         
@@ -77,6 +92,7 @@ def book_spider(book_tag):
             try_times=0 #set 0 when got valid information
         page_num+=1
         print "Downloading Information From Page %d" % page_num
+    print('get single book list')
     return book_list
 
 
@@ -86,11 +102,18 @@ def do_spider(book_tag_lists):
         book_list=book_spider(book_tag)
         book_list=sorted(book_list,key=lambda x:x[1],reverse=True)
         book_lists.append(book_list)
+
+    print('get book lists')
     return book_lists
 
 
 def print_book_lists_excel(book_lists,book_tag_lists):
     wb=Workbook(optimized_write=True)
+
+    print('start print_book_lists_excel')
+
+    create_db()
+
     ws=[]
     for i in range(len(book_tag_lists)):
         ws.append(wb.create_sheet(title=book_tag_lists[i].decode())) #utf8->unicode
@@ -100,18 +123,20 @@ def print_book_lists_excel(book_lists,book_tag_lists):
         for bl in book_lists[i]:
             ws[i].append([count,bl[0],float(bl[1]),int(bl[2]),bl[3],bl[4]])
             count+=1
-    save_path='book_list'
+
+    # 获取 存储路径
+    f =  contentClass()
+    save_path= f.getContentForDouBan(BOOk_TYPE)
+    print('save path:',save_path)
+
     for i in range(len(book_tag_lists)):
         save_path+=('-'+book_tag_lists[i].decode())
     save_path+='.xlsx'
     wb.save(save_path)
+    print('save finish,at',save_path)
 
 
+def create_db():
+    do_init_db('douban')
+    print('db finish')
 
-if __name__=='__main__':
-    #book_tag_lists = ['心理','判断与决策','算法','数据结构','经济','历史']
-    #book_tag_lists = ['传记','哲学','编程','创业','理财','社会学','佛教']
-    #book_tag_lists=['思想','科技','科学','web','股票','爱情','两性']
-    book_tag_lists=['计算机','机器学习','linux','android','数据库','互联网']
-    book_lists=do_spider(book_tag_lists)
-    print_book_lists_excel(book_lists,book_tag_lists)

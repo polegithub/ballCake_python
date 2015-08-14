@@ -1,18 +1,17 @@
 __author__ = 'chengpoleness'
 
 
+# -*- coding: utf-8 -*-
 
 
 import MySQLdb
-# -*- coding: utf-8 -*-
 
 #localhost = 127.0.0.1
 
+conn=MySQLdb.connect(host="127.0.0.1",user="root",passwd="",db="ballCake",charset="utf8")
+curs = conn.cursor()
 
-def do_init_db():
-
-    conn=MySQLdb.connect(host="127.0.0.1",user="root",passwd="",db="mysql",charset="utf8")
-    curs = conn.cursor()
+def do_init_db(dbType):
 
     try:
         curs.execute('create database if not exist ballCake')
@@ -29,17 +28,19 @@ def do_init_db():
     #         print r
 
     # create a table named addfields
-    try:
-        curs.execute('create table douban_book(id int PRIMARY KEY NOT NULL,bookName text,score text,scoedNum int)')
-    except:
-        print('The table douban_book success!')
+    if dbType == 'douban':
+        try:
+                curs.execute('create table douban_book(id int PRIMARY KEY NOT NULL,bookName text,score text,scoedNum int)')
+        except:
+                print('The table douban_book success!')
 
-    try:
-        # sql = "alter table douban_book add (publisher text,author text,publishTime text,price text)"
-        sql = "alter table douban_book add (price text)"
-        curs.execute(sql)
-    except:
-        print('add keys for douban')
+        try:
+                # sql = "alter table douban_book add (publisher text,author text,publishTime text,price text)"
+                sql = "alter table douban_book add (price text)"
+                curs.execute(sql)
+        except:
+                print('add keys for douban')
+
 
 
     # add the fileds
@@ -61,6 +62,34 @@ def do_init_db():
     #         curs.execute(sql)
 
     #this is very important
+    connectionEnd()
+
+
+def connectionEnd():
     conn.commit()
     curs.close()
     conn.close()
+
+
+def saveDataForDouban(id,bookName,score,scoredNum,author,publisher,publishTime,price):
+
+    values = (int(id),str(bookName),str(score),int(scoredNum),str(author),str(publisher),str(publishTime),str(price))
+    sql = 'insert into douban_book (id,bookName,score,scoredNum,author,publisher,publishTime,price) values (%d,%s,%s,%d,%s,%s,%s,%s)'%values
+    print(sql)
+
+    # sql = "insert into douban_book (id,bookName,score,scoredNum,author,publisher,publishTime,price) values ('2','2','9.7','0','2Randal E.Bryant / David O Hallaron ' ,'22', '2011-1-1' ,' 99.00')"
+
+    # curs.execute(sql)
+
+
+    # value =(int(id),str(bookName))
+    # sql = "insert into douban_book (id,bookName,) values (%d,%s)"%(id,bookName)
+
+    # curs.execute(sql)
+
+
+
+    connectionEnd()
+
+
+

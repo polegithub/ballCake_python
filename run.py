@@ -10,7 +10,7 @@ from crawler.getBasicData.getTianYaData import SearchData
 from crawler.getBasicData.getZhihuData import SearchData
 from analyse.dbHandle import do_init_db
 
-
+from crawler.getBasicData.getbooklistfromDB import startSearchBoook
 
 print('Let us begin')
 
@@ -22,13 +22,15 @@ if __name__=='__main__' :
     # 数据库  MainValue =2，
     # 其他待定义
 
-    MainValue = 2
+    MainValue = 1
 
     if MainValue == 1:
-        f = SearchData()
-        f.search()
+        # f = SearchData()
+        # f.search()
+        startSearchBoook()
     elif MainValue == 2:
-        do_init_db()
+        # do_init_db()
+        pass
     else:
         pass
 

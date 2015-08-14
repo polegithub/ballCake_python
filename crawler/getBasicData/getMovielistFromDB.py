@@ -25,7 +25,7 @@ def movie_spider(movie_tag):
          {'User-Agent': 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)'}]
          
     while(1):
-        url="http://www.douban.com/tag/"+urllib.quote(movie_tag)+"/movie?start="+str(page_num*15)
+        url="http://www.douban.com/tag/"+urllib.quote(movie_tag)"/movie?start="+str(page_num*15)
         time.sleep(np.random.rand()*2)
         
         #Last Version
@@ -54,9 +54,9 @@ def movie_spider(movie_tag):
             title = movie_info.find('a', {'class':'title'}).string.strip()
             desc = movie_info.find('div', {'class':'desc'}).string.strip()            
             year = filter(lambda x: x.isdigit(), desc) #找出字符串中的数字，即年份
-		    desc_list = desc.split('year') #以年份为分隔符，将字符串分割
+            desc_list = desc.split(year) #以年份为分隔符，将字符串分割
             
-		    try:
+            try:
                 type = '类型： ' + '/'.join(desc_list[0].split('/')[:-1]) #找出影片的类型
             except:
                 type = '类型： 暂无'
@@ -64,10 +64,10 @@ def movie_spider(movie_tag):
                 director = '导演： ' + '/'.join(desc_list[-1].split('/')[1]) #找出导演
             except:
                 director = '导演： 暂无'
-		    try:
-			    actor = '演员： ' + '/'.join(desc_list[-1].split('/')[2:]) # 找出演员
-		    except:
-			    actor = '演员： 暂无'
+            try:
+                actor = '演员： ' + '/'.join(desc_list[-1].split('/')[2:]) # 找出演员
+            except:
+                actor = '演员： 暂无'
             try:
                 rating = movie_info.find('span', {'class':'rating_nums'}).string.strip()
             except:

@@ -11,6 +11,7 @@ from openpyxl import Workbook
 
 from crawler.directory.directoryManager import contentClass
 from  analyse.dbHandle import do_init_db
+from  analyse.dbHandle import saveDataForDouban
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -112,7 +113,8 @@ def print_book_lists_excel(book_lists,book_tag_lists):
 
     print('start print_book_lists_excel')
 
-    create_db()
+    #have create succ in polen computer,so i commit them,2015-08-15 00:29:46
+    # create_db()
 
     ws=[]
     for i in range(len(book_tag_lists)):
@@ -122,6 +124,17 @@ def print_book_lists_excel(book_lists,book_tag_lists):
         count=1
         for bl in book_lists[i]:
             ws[i].append([count,bl[0],float(bl[1]),int(bl[2]),bl[3],bl[4]])
+
+            #解析 出版信息
+            publisherInfo = bl[4].split('/')
+            publisher = publisherInfo[0].split(' ')
+            print('publish:',publisher)
+            publisher = publisher[2]
+            publishTime  = publisherInfo[1]
+            price = publisherInfo[2]
+
+            # saveDataForDouban(count,bl[0],str(bl[1]),int(bl[2]),bl[3],str(publisher),str(publishTime),str(price))
+
             count+=1
 
     # 获取 存储路径

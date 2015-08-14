@@ -1,18 +1,17 @@
 __author__ = 'chengpoleness'
 
 
+# -*- coding: utf-8 -*-
 
 
 import MySQLdb
-# -*- coding: utf-8 -*-
 
 #localhost = 127.0.0.1
 
+conn=MySQLdb.connect(host="127.0.0.1",user="root",passwd="",db="ballCake",charset="utf8")
+curs = conn.cursor()
 
 def do_init_db(dbType):
-
-    conn=MySQLdb.connect(host="127.0.0.1",user="root",passwd="",db="mysql",charset="utf8")
-    curs = conn.cursor()
 
     try:
         curs.execute('create database if not exist ballCake')
@@ -63,10 +62,34 @@ def do_init_db(dbType):
     #         curs.execute(sql)
 
     #this is very important
+    connectionEnd()
+
+
+def connectionEnd():
     conn.commit()
     curs.close()
     conn.close()
 
+
+def saveDataForDouban(id,bookName,score,scoredNum,author,publisher,publishTime,price):
+
+    values = (int(id),str(bookName),str(score),int(scoredNum),str(author),str(publisher),str(publishTime),str(price))
+    sql = 'insert into douban_book (id,bookName,score,scoredNum,author,publisher,publishTime,price) values (%d,%s,%s,%d,%s,%s,%s,%s)'%values
+    print(sql)
+
+    # sql = "insert into douban_book (id,bookName,score,scoredNum,author,publisher,publishTime,price) values ('2','2','9.7','0','2Randal E.Bryant / David O Hallaron ' ,'22', '2011-1-1' ,' 99.00')"
+
+    # curs.execute(sql)
+
+
+    # value =(int(id),str(bookName))
+    # sql = "insert into douban_book (id,bookName,) values (%d,%s)"%(id,bookName)
+
+    # curs.execute(sql)
+
+
+
+    connectionEnd()
 
 
 

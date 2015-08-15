@@ -18,7 +18,7 @@ class contentClass:
         # MUSIC :3
 
 
-        content = 'data/Douban/'
+        content = 'data/douban/'
 
         if type == 1:
              content =  content + 'Book'
@@ -29,8 +29,8 @@ class contentClass:
         else:
             content =  content + 'Other'
 
-        if os.path.isdir(content) == False :
-             os.mkdir(content)
+        if os.path.isdir(content) == False:
+            os.mkdir(content)
 
         return content
 

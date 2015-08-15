@@ -8,7 +8,7 @@ import MySQLdb
 
 #localhost = 127.0.0.1
 
-conn=MySQLdb.connect(host="127.0.0.1",user="root",passwd="",db="ballCake",charset="utf8")
+conn=MySQLdb.connect(host="127.0.0.1",user="root",passwd="",db="mysql",charset="utf8")
 curs = conn.cursor()
 
 def do_init_db(dbType):

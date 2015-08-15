@@ -11,6 +11,7 @@ from crawler.getBasicData.getZhihuData import SearchData
 from analyse.dbHandle import do_init_db
 
 from crawler.getBasicData.getbooklistfromDB import startSearchBoook
+from crawler.getBasicData.getMovielistFromDB import startSearchMovie
 
 print('Let us begin')
 
@@ -27,7 +28,7 @@ if __name__=='__main__' :
     if MainValue == 1:
         # f = SearchData()
         # f.search()
-        startSearchBoook()
+        startSearchMovie()
     elif MainValue == 2:
         # do_init_db()
         pass

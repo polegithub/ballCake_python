@@ -9,8 +9,24 @@ import numpy as np
 from bs4 import BeautifulSoup
 from openpyxl import Workbook
 
+from crawler.directory.directoryManager import contentClass
+
 reload(sys)
 sys.setdefaultencoding('utf8')
+
+
+MOVIE_TYPE = 2
+
+def startSearchMovie():
+
+    #book_tag_lists = ['心理','判断与决策','算法','数据结构','经济','历史']
+    #book_tag_lists = ['传记','哲学','编程','创业','理财','社会学','佛教']
+    #book_tag_lists=['思想','科技','科学','web','股票','爱情','两性']
+    movie_tag_lists=['经典']
+
+
+    movie_lists=do_spider(movie_tag_lists)
+    print_movie_lists_excel(movie_lists,movie_tag_lists)
 
 
 def movie_spider(movie_tag):
@@ -24,7 +40,7 @@ def movie_spider(movie_tag):
          {'User-Agent':'Mozilla/5.0 (Windows NT 6.2) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.12 Safari/535.11'},\
          {'User-Agent': 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)'}]
          
-    while(1):
+    while(page_num < 2):
         url="http://www.douban.com/tag/"+urllib.quote(movie_tag)+"/movie?start="+str(page_num*15)
         time.sleep(np.random.rand()*2)
         
@@ -105,18 +121,16 @@ def print_movie_lists_excel(movie_lists,movie_tag_lists):
         for bl in movie_lists[i]:
             ws[i].append([count,bl[0],float(bl[1]),int(bl[2]),bl[3],int(bl[4]),bl[5],bl[6]])
             count+=1
-    save_path='movie_list'
+
+        # 获取 存储路径
+    f =  contentClass()
+    save_path= f.getContentForDouBan(2)
+    print('save path:',save_path)
+
+
     for i in range(len(movie_tag_lists)):
         save_path+=('-'+movie_tag_lists[i].decode())
     save_path+='.xlsx'
     wb.save(save_path)
 
 
-
-if __name__=='__main__':
-    #book_tag_lists = ['心理','判断与决策','算法','数据结构','经济','历史']
-    #book_tag_lists = ['传记','哲学','编程','创业','理财','社会学','佛教']
-    #book_tag_lists=['思想','科技','科学','web','股票','爱情','两性']
-    movie_tag_lists=['经典']
-    movie_lists=do_spider(movie_tag_lists)
-    print_movie_lists_excel(movie_lists,movie_tag_lists)

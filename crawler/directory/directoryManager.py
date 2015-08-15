@@ -37,11 +37,9 @@ class contentClass:
         if os.path.isdir(directory) == False :
              os.makedirs(str(directory))
 
-<<<<<<< HEAD
         if os.path.isdir(content) == False:
             os.mkdir(content)
-=======
->>>>>>> fe587c0d523ce2c7b1b019585e71f5ddc71be75c
+
 
         return content
 

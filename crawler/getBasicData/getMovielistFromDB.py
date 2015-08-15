@@ -129,27 +129,17 @@ def print_movie_lists_excel(movie_lists,movie_tag_lists):
         for bl in movie_lists[i]:
             ws[i].append([count,bl[0],float(bl[1]),int(bl[2]),bl[3],int(bl[4]),bl[5],bl[6]])
             count+=1
-<<<<<<< HEAD
-    
-=======
+
 
         # 获取 存储路径
->>>>>>> fe587c0d523ce2c7b1b019585e71f5ddc71be75c
     f =  contentClass()
     save_path= f.getContentForDouBan(2)
     print('save path:',save_path)
 
-<<<<<<< HEAD
-=======
 
->>>>>>> fe587c0d523ce2c7b1b019585e71f5ddc71be75c
     for i in range(len(movie_tag_lists)):
         save_path+=('-'+movie_tag_lists[i].decode())
     save_path+='.xlsx'
     wb.save(save_path)
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> fe587c0d523ce2c7b1b019585e71f5ddc71be75c

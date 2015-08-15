@@ -12,7 +12,7 @@ from crawler.getBasicData.getZhihuData import SearchData
 #from analyse.dbHandle import do_init_db
 
 from crawler.getBasicData.getbooklistfromDB import startSearchBoook
-from crawler.getBasicData.getMovielistFromDB import startSearchMovie
+from crawler.getBasicData.doubanMovie import DoubanMovie
 
 
 from crawler.crawlerManager.crawlerManager import Factory
@@ -34,7 +34,8 @@ if __name__=='__main__' :
     if MainValue == 1:
         # f = SearchData()
         # f.search()
-        startSearchMovie()
+        d = DoubanMovie()
+        d.startSearchMovie()
     elif MainValue == 2:
         # do_init_db()
         # dbSessionHandle()

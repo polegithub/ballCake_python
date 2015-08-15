@@ -71,7 +71,7 @@ class DoubanMovie():
             soup = BeautifulSoup(plain_text)
             list_soup = soup.find('div', {'class': 'mod movie-list'})
 
-            try_times+=1;
+            try_times+=1
             if list_soup==None and try_times<200:
                 continue
             elif list_soup==None or len(list_soup)<=1:
@@ -83,39 +83,62 @@ class DoubanMovie():
                 title = titleFull.string.strip()
 
                 url = titleFull.get('href')
-                self.getDetailInfoOfMovie(url)
 
-                desc = movie_info.find('div', {'class':'desc'}).string.strip()
-                year = filter(lambda x: x.isdigit(), desc)
-                desc_list = desc.split(year)
-                url ='ww.dabdiwa ,cin'
+                time.sleep(np.random.rand()*2)
+
+                try:
+                    req_detail = urllib2.Request(url)
+                    source_code_detail = urllib2.urlopen(req_detail).read()
+                    plain_text_detail=str(source_code_detail)
+                except (urllib2.HTTPError, urllib2.URLError), e:
+                    print e
+
+                soup_detail = BeautifulSoup(plain_text_detail)
 
 
                 try:
-                    type = '/'.join(desc_list[0].split('/')[:-1])
+                    director = soup_detail.find("a",attrs = {"rel":"v:directedBy"}).string.strip()
                 except:
-                    type = '暂无'
-                try:
-                    director = desc_list[-1].split('/')[1]
-                except:
-                    director = '暂无'
-                try:
-                    actor = '/'.join(desc_list[-1].split('/')[2:])
-                except:
-                    actor = '暂无'
-                try:
-                    rating = movie_info.find('span', {'class':'rating_nums'}).string.strip()
-                except:
-                    rating='0.0'
-                try:
-                    people_num = movie_info.findAll('span')[2].string.strip()
-                    people_num=people_num.strip('人评价')
-                except:
-                    people_num='0'
+                    director = "暂无"
 
+                try:
+                    actors = soup_detail.findAll("a",attrs = {"rel":"v:starring"})
+                    actor_list = []
+                    for i in range(0,len(actors)):
+                        actor = actors[i].string.strip()
+                        actor_list.append(actor)
+                    actor = '/'.join(actor_list)
+                except:
+                    actor = "暂无"
 
+                try:
+                    type_lists = soup_detail.findAll("span",attrs = {"property":"v:genre"})
+                    type_list = []
+                    for i in range(0,len(type_lists)):
+                        type = type_lists[i].string.strip()
+                        type_list.append(type)
+                    type = '/'.join(type_list)
+                except:
+                    type = "暂无"
 
-                movie_list.append([title,rating,people_num,type,year,director,actor])
+                try:
+                    ReleaseDate = soup_detail.find("span",attrs = {"property":"v:initialReleaseDate"}).string.strip()
+                except:
+                    ReleaseDate = "暂无"
+
+                try:
+                    rating_num = soup_detail.find("strong",attrs = {"property":"v:average"}).string.strip()
+                except:
+                    rating_num = "暂无"
+
+                try:
+                    vote_num = soup_detail.find("span",attrs = {"property":"v:votes"}).string.strip()
+                except:
+                    vote_num = "暂无"
+
+                movie_model =[title,rating_num,vote_num,type,ReleaseDate,director,actor]
+
+                movie_list.append(movie_model)
                 try_times=0 #set 0 when got valid information
             page_num += 1
             print "Downloading Information From Page %d" % page_num
@@ -146,19 +169,5 @@ class DoubanMovie():
         save_path+='.xlsx'
         wb.save(save_path)
 
-    def getDetailInfoOfMovie(url):
-        time.sleep(np.random.rand()*2)
-        try:
-            req = urllib2.Request(url)
-            source_code = urllib2.urlopen(req).read()
-            plain_text=str(source_code)
-        except (urllib2.HTTPError, urllib2.URLError), e:
-            print e
 
-        ##Previous Version, IP is easy to be Forbidden
-        #source_code = requests.get(url)
-        #plain_text = source_code.text
-
-        soup = BeautifulSoup(plain_text)
-        list_soup = soup.find('div', {'class': 'mod movie-list'})
 

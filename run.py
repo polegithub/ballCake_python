@@ -25,7 +25,7 @@ if __name__=='__main__' :
     # 数据库  MainValue =2，
     # 其他待定义
 
-    MainValue = 2
+    MainValue = 1
 
     if MainValue == 1:
         # f = SearchData()
@@ -33,7 +33,8 @@ if __name__=='__main__' :
         startSearchMovie()
     elif MainValue == 2:
         # do_init_db()
-        dbSessionHandle()
+        # dbSessionHandle()
+        pass
 
     else:
         pass

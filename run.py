@@ -1,4 +1,5 @@
-#coding=utf-8
+#-*- coding: UTF-8 -*-
+
 import urllib
 import re
 
@@ -13,7 +14,10 @@ from crawler.getBasicData.getZhihuData import SearchData
 from crawler.getBasicData.getbooklistfromDB import startSearchBoook
 from crawler.getBasicData.getMovielistFromDB import startSearchMovie
 
-from analyse import dbSessionHandle
+
+from crawler.crawlerManager.crawlerManager import Factory
+
+# from analyse import dbSessionHandle
 
 print('Let us begin')
 
@@ -25,7 +29,7 @@ if __name__=='__main__' :
     # 数据库  MainValue =2，
     # 其他待定义
 
-    MainValue = 1
+    MainValue = 3
 
     if MainValue == 1:
         # f = SearchData()
@@ -36,6 +40,10 @@ if __name__=='__main__' :
         # dbSessionHandle()
         pass
 
+    elif MainValue ==3:
+        print('enter mode 3')
+        f = Factory()
+        f.create_scrapy('doubanMovie',)
     else:
         pass
 

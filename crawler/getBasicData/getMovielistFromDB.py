@@ -31,21 +31,6 @@ def do_spider(movie_tag_lists):
         movie_lists.append(movie_list)
     return movie_lists
 
-
-MOVIE_TYPE = 2
-
-def startSearchMovie():
-
-    #book_tag_lists = ['心理','判断与决策','算法','数据结构','经济','历史']
-    #book_tag_lists = ['传记','哲学','编程','创业','理财','社会学','佛教']
-    #book_tag_lists=['思想','科技','科学','web','股票','爱情','两性']
-    movie_tag_lists=['经典']
-
-
-    movie_lists=do_spider(movie_tag_lists)
-    print_movie_lists_excel(movie_lists,movie_tag_lists)
-
-
 def movie_spider(movie_tag):
     page_num=0;
     count=1

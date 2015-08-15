@@ -55,20 +55,22 @@ class DoubanMovie():
             url="http://www.douban.com/tag/"+urllib.quote(movie_tag)+"/movie?start="+str(page_num*15)
             time.sleep(np.random.rand()*2)
 
-            #Last Version
-            try:
-                req = urllib2.Request(url, headers=hds[page_num%len(hds)])
-                source_code = urllib2.urlopen(req).read()
-                plain_text=str(source_code)
-            except (urllib2.HTTPError, urllib2.URLError), e:
-                print e
-                continue
+            # #Last Version
+            # try:
+            #     req = urllib2.Request(url,heads = hds[page_num%len(hds)])
+            #     source_code = urllib2.urlopen(req).read()
+            #     plain_text=str(source_code)
+            # except (urllib2.HTTPError, urllib2.URLError), e:
+            #     print e
+            #     continue
+
+            request = urllib2.Request(url,headers=hds[page_num%len(hds)])
+            soup = self.getSoupWithUrl(request)
 
             ##Previous Version, IP is easy to be Forbidden
             #source_code = requests.get(url)
             #plain_text = source_code.text
 
-            soup = BeautifulSoup(plain_text)
             list_soup = soup.find('div', {'class': 'mod movie-list'})
 
             try_times+=1
@@ -83,60 +85,10 @@ class DoubanMovie():
                 title = titleFull.string.strip()
 
                 url = titleFull.get('href')
+                request = urllib2.Request(url)
+                soup_detail = self.getSoupWithUrl(request)
 
-                time.sleep(np.random.rand()*2)
-
-                try:
-                    req_detail = urllib2.Request(url)
-                    source_code_detail = urllib2.urlopen(req_detail).read()
-                    plain_text_detail=str(source_code_detail)
-                except (urllib2.HTTPError, urllib2.URLError), e:
-                    print e
-
-                soup_detail = BeautifulSoup(plain_text_detail)
-
-
-                try:
-                    director = soup_detail.find("a",attrs = {"rel":"v:directedBy"}).string.strip()
-                except:
-                    director = "暂无"
-
-                try:
-                    actors = soup_detail.findAll("a",attrs = {"rel":"v:starring"})
-                    actor_list = []
-                    for i in range(0,len(actors)):
-                        actor = actors[i].string.strip()
-                        actor_list.append(actor)
-                    actor = '/'.join(actor_list)
-                except:
-                    actor = "暂无"
-
-                try:
-                    type_lists = soup_detail.findAll("span",attrs = {"property":"v:genre"})
-                    type_list = []
-                    for i in range(0,len(type_lists)):
-                        type = type_lists[i].string.strip()
-                        type_list.append(type)
-                    type = '/'.join(type_list)
-                except:
-                    type = "暂无"
-
-                try:
-                    ReleaseDate = soup_detail.find("span",attrs = {"property":"v:initialReleaseDate"}).string.strip()
-                except:
-                    ReleaseDate = "暂无"
-
-                try:
-                    rating_num = soup_detail.find("strong",attrs = {"property":"v:average"}).string.strip()
-                except:
-                    rating_num = "暂无"
-
-                try:
-                    vote_num = soup_detail.find("span",attrs = {"property":"v:votes"}).string.strip()
-                except:
-                    vote_num = "暂无"
-
-                movie_model =[title,rating_num,vote_num,type,ReleaseDate,director,actor]
+                movie_model = self.getDetailModel(title,soup_detail)
 
                 movie_list.append(movie_model)
                 try_times=0 #set 0 when got valid information
@@ -145,16 +97,18 @@ class DoubanMovie():
         return movie_list
 
 
-    def print_movie_lists_excel(movie_lists,movie_tag_lists):
+    #打印到excel
+    def print_movie_lists_excel(self,movie_lists,movie_tag_lists):
         wb=Workbook(optimized_write=True)
         ws=[]
         for i in range(len(movie_tag_lists)):
             ws.append(wb.create_sheet(title=movie_tag_lists[i].decode())) #utf8->unicode
         for i in range(len(movie_tag_lists)):
             ws[i].append(['序号','电影名','评分','评价人数','类型','年份','导演','演员'])
-            count=1
+            count = 1
             for bl in movie_lists[i]:
-                ws[i].append([count,bl[0],float(bl[1]),int(bl[2]),bl[3],int(bl[4]),bl[5],bl[6]])
+
+                ws[i].append([count,bl[0],float(bl[1]),int(bl[2]),bl[3],(bl[4]),bl[5],bl[6]])
                 count+=1
 
 
@@ -169,5 +123,66 @@ class DoubanMovie():
         save_path+='.xlsx'
         wb.save(save_path)
 
+
+
+    # 获取电影的详细信息
+    def getDetailModel(self,title,soup_detail):
+        try:
+            director = soup_detail.find("a",attrs = {"rel":"v:directedBy"}).string.strip()
+        except:
+            director = "暂无"
+
+        try:
+            actors = soup_detail.findAll("a",attrs = {"rel":"v:starring"})
+            actor_list = []
+            for i in range(0,len(actors)):
+                actor = actors[i].string.strip()
+                actor_list.append(actor)
+            actor = '/'.join(actor_list)
+        except:
+            actor = "暂无"
+
+        try:
+            type_lists = soup_detail.findAll("span",attrs = {"property":"v:genre"})
+            type_list = []
+            for i in range(0,len(type_lists)):
+                type = type_lists[i].string.strip()
+                type_list.append(type)
+            type = '/'.join(type_list)
+        except:
+            type = "暂无"
+
+        try:
+            ReleaseDate = soup_detail.find("span",attrs = {"property":"v:initialReleaseDate"}).string.strip()
+        except:
+            ReleaseDate = "暂无"
+
+        try:
+            rating_num = soup_detail.find("strong",attrs = {"property":"v:average"}).string.strip()
+        except:
+            rating_num = "暂无"
+
+        try:
+            vote_num = soup_detail.find("span",attrs = {"property":"v:votes"}).string.strip()
+        except:
+            vote_num = "暂无"
+
+        movie_model =[title,rating_num,vote_num,type,ReleaseDate,director,actor]
+
+        return movie_model
+
+    #比较通用的解析url的函数
+    def getSoupWithUrl(self,req):
+        time.sleep(np.random.rand()*2)
+
+        try:
+            source_code_detail = urllib2.urlopen(req).read()
+            plain_text_detail=str(source_code_detail)
+        except (urllib2.HTTPError, urllib2.URLError), e:
+            print e
+
+        soup = BeautifulSoup(plain_text_detail)
+
+        return soup
 
 

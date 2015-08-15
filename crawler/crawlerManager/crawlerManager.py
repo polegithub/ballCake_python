@@ -19,12 +19,18 @@ class Factory:
         self.session = session()
 
     def create_scrapy(self, name):
+        if name == 'doubanMovie':
+            d = DoubanMovie(self.session)
+            d.startSearchMovie()
+            pass
+        else:
+            print('enter else of create scrap')
         # if name == 'baidu':
         #     return baidu.BaiDu(self.session, start_id)
         # if name == 'eleme':
         #     return eleme.Eleme(self.session, start_id)
-        if name == 'douban_movie':
-            d = DoubanMovie(self.session)
-            d.startSearchMovie()
-            pass
+
+    def saveData(self):
+        pass
+
 

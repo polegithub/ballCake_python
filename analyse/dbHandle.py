@@ -73,10 +73,26 @@ def connectionEnd():
 
 def saveDataForDouban(id,bookName,score,scoredNum,author,publisher,publishTime,price):
 
-    values = (int(id),str(bookName),str(score),int(scoredNum),str(author),str(publisher),str(publishTime),str(price))
-    sql = 'insert into douban_book (id,bookName,score,scoredNum,author,publisher,publishTime,price) values (%d,%s,%s,%d,%s,%s,%s,%s)'%values
-    print(sql)
+    print('enter database handle')
 
+    valuesName = (int(id),str(bookName),str(score),int(scoredNum),str(author))
+
+    result = curs.execute('select * from douban_book where id = %d'%id)
+    if result is not None:
+        sqlName = "insert into douban_book (id,bookName,score,scoredNum,author) values ('%d','%s','%s','%d','%s')"%valuesName
+    else:
+        sqlName = "insert into douban_book (id,bookName,score,scoredNum,author) values ('%d','%s','%s','%d','%s')"%valuesName
+
+    print(sqlName)
+
+    curs.execute(sqlName)
+
+    valuesPublish = (int(id),str(publisher),str(publishTime),str(price))
+    sqlPublish = "insert into douban_book (id,publisher,publishTime,price) values ('%d','%s','%s','%s','%s')"%valuesPublish
+
+    print(sqlPublish)
+
+    curs.execute(sqlPublish)
     # sql = "insert into douban_book (id,bookName,score,scoredNum,author,publisher,publishTime,price) values ('2','2','9.7','0','2Randal E.Bryant / David O Hallaron ' ,'22', '2011-1-1' ,' 99.00')"
 
     # curs.execute(sql)

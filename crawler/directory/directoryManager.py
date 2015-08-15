@@ -18,16 +18,22 @@ class contentClass:
         # MUSIC :3
 
 
-        content = 'data/douban/'
+        content = 'data/Douban/'
         if os.path.isdir(content) == False :
              os.mkdir(content)
 
         if type == 1:
-            return  (content + 'book')
+             content =  content + 'Book'
         elif type == 2:
-            return  content + 'movie'
+            content =   content + 'Movie'
         elif type == 3:
-            return  content + 'music'
+            content =   content + 'Music'
         else:
-            return content + 'other'
+            content =  content + 'Other'
+
+        if os.path.isdir(content) == False :
+             os.mkdir(content)
+
+        return content
+
 

@@ -21,16 +21,27 @@ class contentClass:
         content = 'data/douban/'
 
         if type == 1:
-             content =  content + 'Book'
+             directory =  content + 'Book'
+             content = directory + '/Book'
         elif type == 2:
-            content =   content + 'Movie'
+            directory =   content + 'Movie'
+            content = directory + '/Movie'
         elif type == 3:
-            content =   content + 'Music'
+            directory =   content + 'Music'
+            content = directory + '/Music'
         else:
-            content =  content + 'Other'
+            directory =  content + 'Other'
+            content = directory + '/Other'
 
+        print('directory:',directory,'content:',content)
+        if os.path.isdir(directory) == False :
+             os.makedirs(str(directory))
+
+<<<<<<< HEAD
         if os.path.isdir(content) == False:
             os.mkdir(content)
+=======
+>>>>>>> fe587c0d523ce2c7b1b019585e71f5ddc71be75c
 
         return content
 

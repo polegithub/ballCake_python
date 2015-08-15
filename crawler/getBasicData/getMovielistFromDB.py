@@ -10,6 +10,8 @@ from bs4 import BeautifulSoup
 from openpyxl import Workbook
 from crawler.directory.directoryManager import contentClass
 
+from crawler.directory.directoryManager import contentClass
+
 reload(sys)
 sys.setdefaultencoding('utf8')
 
@@ -28,6 +30,20 @@ def do_spider(movie_tag_lists):
         movie_list=sorted(movie_list,key=lambda x:x[1],reverse=True)
         movie_lists.append(movie_list)
     return movie_lists
+
+
+MOVIE_TYPE = 2
+
+def startSearchMovie():
+
+    #book_tag_lists = ['心理','判断与决策','算法','数据结构','经济','历史']
+    #book_tag_lists = ['传记','哲学','编程','创业','理财','社会学','佛教']
+    #book_tag_lists=['思想','科技','科学','web','股票','爱情','两性']
+    movie_tag_lists=['经典']
+
+
+    movie_lists=do_spider(movie_tag_lists)
+    print_movie_lists_excel(movie_lists,movie_tag_lists)
 
 
 def movie_spider(movie_tag):
@@ -113,15 +129,27 @@ def print_movie_lists_excel(movie_lists,movie_tag_lists):
         for bl in movie_lists[i]:
             ws[i].append([count,bl[0],float(bl[1]),int(bl[2]),bl[3],int(bl[4]),bl[5],bl[6]])
             count+=1
+<<<<<<< HEAD
     
+=======
+
+        # 获取 存储路径
+>>>>>>> fe587c0d523ce2c7b1b019585e71f5ddc71be75c
     f =  contentClass()
     save_path= f.getContentForDouBan(2)
     print('save path:',save_path)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> fe587c0d523ce2c7b1b019585e71f5ddc71be75c
     for i in range(len(movie_tag_lists)):
         save_path+=('-'+movie_tag_lists[i].decode())
     save_path+='.xlsx'
     wb.save(save_path)
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> fe587c0d523ce2c7b1b019585e71f5ddc71be75c

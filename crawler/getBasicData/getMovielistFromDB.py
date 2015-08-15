@@ -15,6 +15,8 @@ from crawler.directory.directoryManager import contentClass
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+MOVIE_TYPE = 2
+
 def startSearchMovie():
     #movie_tag_lists = ['爱情','喜剧','动画','科幻','剧情','动作']
     #movie_tag_lists = ['经典','悬疑','青春','犯罪','惊悚','文艺','纪录片']
@@ -30,20 +32,6 @@ def do_spider(movie_tag_lists):
         movie_list=sorted(movie_list,key=lambda x:x[1],reverse=True)
         movie_lists.append(movie_list)
     return movie_lists
-
-
-MOVIE_TYPE = 2
-
-def startSearchMovie():
-
-    #book_tag_lists = ['心理','判断与决策','算法','数据结构','经济','历史']
-    #book_tag_lists = ['传记','哲学','编程','创业','理财','社会学','佛教']
-    #book_tag_lists=['思想','科技','科学','web','股票','爱情','两性']
-    movie_tag_lists=['经典']
-
-
-    movie_lists=do_spider(movie_tag_lists)
-    print_movie_lists_excel(movie_lists,movie_tag_lists)
 
 
 def movie_spider(movie_tag):
@@ -84,11 +72,19 @@ def movie_spider(movie_tag):
             break # Break when no informatoin got after 200 times requesting
         
         for movie_info in list_soup.findAll('dd'):
-            title = movie_info.find('a', {'class':'title'}).string.strip()
-            desc = movie_info.find('div', {'class':'desc'}).string.strip()            
+            titleFull =movie_info.find('a', {'class':'title'})
+
+            title = titleFull.string.strip()
+
+            url = titleFull.get('href')
+            getDetailInfoOfMovie(url)
+
+            desc = movie_info.find('div', {'class':'desc'}).string.strip()
             year = filter(lambda x: x.isdigit(), desc) #找出字符串中的数字，即年份
             desc_list = desc.split(year) #以年份为分隔符，将字符串分割
-            
+            url ='ww.dabdiwa ,cin'
+
+
             try:
                 type = '/'.join(desc_list[0].split('/')[:-1]) #找出影片的类型
             except:
@@ -106,11 +102,13 @@ def movie_spider(movie_tag):
             except:
                 rating='0.0'
             try:
-                people_num = book_info.findAll('span')[2].string.strip()
+                people_num = movie_info.findAll('span')[2].string.strip()
                 people_num=people_num.strip('人评价')
             except:
                 people_num='0'
-            
+
+
+
             movie_list.append([title,rating,people_num,type,year,director,actor])
             try_times=0 #set 0 when got valid information
         page_num += 1
@@ -142,4 +140,19 @@ def print_movie_lists_excel(movie_lists,movie_tag_lists):
     save_path+='.xlsx'
     wb.save(save_path)
 
+def getDetailInfoOfMovie(url):
+    time.sleep(np.random.rand()*2)
+    try:
+        req = urllib2.Request(url)
+        source_code = urllib2.urlopen(req).read()
+        plain_text=str(source_code)
+    except (urllib2.HTTPError, urllib2.URLError), e:
+        print e
+
+    ##Previous Version, IP is easy to be Forbidden
+    #source_code = requests.get(url)
+    #plain_text = source_code.text
+
+    soup = BeautifulSoup(plain_text)
+    list_soup = soup.find('div', {'class': 'mod movie-list'})
 

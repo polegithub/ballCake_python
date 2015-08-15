@@ -19,8 +19,6 @@ class contentClass:
 
 
         content = 'data/Douban/'
-        if os.path.isdir(content) == False :
-             os.mkdir(content)
 
         if type == 1:
              content =  content + 'Book'

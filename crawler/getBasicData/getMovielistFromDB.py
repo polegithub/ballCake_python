@@ -54,20 +54,20 @@ def movie_spider(movie_tag):
             title = movie_info.find('a', {'class':'title'}).string.strip()
             desc = movie_info.find('div', {'class':'desc'}).string.strip()            
             year = filter(lambda x: x.isdigit(), desc) #找出字符串中的数字，即年份
-		    desc_list = desc.split('year') #以年份为分隔符，将字符串分割
+            desc_list = desc.split(year) #以年份为分隔符，将字符串分割
             
-		    try:
-                type = '类型： ' + '/'.join(desc_list[0].split('/')[:-1]) #找出影片的类型
-            except:
-                type = '类型： 暂无'
             try:
-                director = '导演： ' + '/'.join(desc_list[-1].split('/')[1]) #找出导演
+                type = '/'.join(desc_list[0].split('/')[:-1]) #找出影片的类型
             except:
-                director = '导演： 暂无'
-		    try:
-			    actor = '演员： ' + '/'.join(desc_list[-1].split('/')[2:]) # 找出演员
-		    except:
-			    actor = '演员： 暂无'
+                type = '暂无'
+            try:
+                director = desc_list[-1].split('/')[1] #找出导演
+            except:
+                director = '暂无'
+            try:
+                actor = '/'.join(desc_list[-1].split('/')[2:]) # 找出演员
+            except:
+                actor = '暂无'
             try:
                 rating = movie_info.find('span', {'class':'rating_nums'}).string.strip()
             except:
@@ -80,7 +80,7 @@ def movie_spider(movie_tag):
             
             movie_list.append([title,rating,people_num,type,year,director,actor])
             try_times=0 #set 0 when got valid information
-        page_num+=1
+        page_num += 1
         print "Downloading Information From Page %d" % page_num
     return movie_list
 
@@ -117,6 +117,6 @@ if __name__=='__main__':
     #book_tag_lists = ['心理','判断与决策','算法','数据结构','经济','历史']
     #book_tag_lists = ['传记','哲学','编程','创业','理财','社会学','佛教']
     #book_tag_lists=['思想','科技','科学','web','股票','爱情','两性']
-    movie_tag_lists=['经典','动画']
+    movie_tag_lists=['经典']
     movie_lists=do_spider(movie_tag_lists)
     print_movie_lists_excel(movie_lists,movie_tag_lists)

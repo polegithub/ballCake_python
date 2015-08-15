@@ -13,6 +13,8 @@ from crawler.getBasicData.getZhihuData import SearchData
 from crawler.getBasicData.getbooklistfromDB import startSearchBoook
 from crawler.getBasicData.getMovielistFromDB import startSearchMovie
 
+from analyse import dbSessionHandle
+
 print('Let us begin')
 
 if __name__=='__main__' :
@@ -23,7 +25,7 @@ if __name__=='__main__' :
     # 数据库  MainValue =2，
     # 其他待定义
 
-    MainValue = 1
+    MainValue = 2
 
     if MainValue == 1:
         # f = SearchData()
@@ -31,7 +33,8 @@ if __name__=='__main__' :
         startSearchMovie()
     elif MainValue == 2:
         # do_init_db()
-        pass
+        dbSessionHandle()
+
     else:
         pass
 

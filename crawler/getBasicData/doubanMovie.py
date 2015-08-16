@@ -128,12 +128,13 @@ class DoubanMovie(Base):
         for i in range(len(movie_tag_lists)):
             ws.append(wb.create_sheet(title=movie_tag_lists[i].decode())) #utf8->unicode
         for i in range(len(movie_tag_lists)):
-            ws[i].append(['序号','电影名','评分','评价人数','类型','年份','导演','演员','五星','四星','三星','二星','一星'])
+            ws[i].append(['序号','电影名','评分','评价人数','类型','年份','导演','演员','五星','四星','三星','二星','一星','推荐列表'])
             count = 1
             for bl in movie_lists[i]:
                 print('bl.len:',len(bl))
 
                 # ws[i].append([count,bl[0],float(bl[1]),int(bl[2]),bl[3],(bl[4]),bl[5],bl[6],bl[7],bl[8],bl[9],bl[10],bl[11]])
+
                 count+=1
 
 
@@ -178,7 +179,12 @@ class DoubanMovie(Base):
             type = "暂无"
 
         try:
-            ReleaseDate = soup_detail.find("span",attrs = {"property":"v:initialReleaseDate"}).string.strip()
+            ReleaseDate_lists = soup_detail.find("span",attrs = {"property":"v:initialReleaseDate"})
+            ReleaseDate_list = []
+            for i in range(0,len(ReleaseDate_lists)):
+                ReleaseDate = ReleaseDate_lists[i].string.strip()
+                ReleaseDate_list.append(ReleaseDate)
+            ReleaseDate = '/'.join(ReleaseDate_list)
         except:
             ReleaseDate = None
 
@@ -187,25 +193,12 @@ class DoubanMovie(Base):
         except:
             rating_num = 0
 
+
         try:
             vote_num = soup_detail.find("span",attrs = {"property":"v:votes"}).string.strip()
         except:
             vote_num = 0
 
-        try:
-            percent = re.compile("\s\d%")
-            stars_percent = soup_detail.find("div", attrs = {"class":"rating_wrap clearbox"}).findAll(text=percent)
-            stars5_percent = stars_percent[0].strip()
-            stars4_percent = stars_percent[1].strip()
-            stars3_percent = stars_percent[2].strip()
-            stars2_percent = stars_percent[3].strip()
-            stars1_percent = stars_percent[4].strip()
-        except:
-            stars5_percent = 0
-            stars4_percent = 0
-            stars3_percent = 0
-            stars2_percent = 0
-            stars1_percent = 0
 
         dateAndRegion = ReleaseDate.split('(')
 
@@ -215,12 +208,35 @@ class DoubanMovie(Base):
         region = dateAndRegion[1]
         movieId = self.getMovieIdFromUrl(url)
 
-        # store data to mysql
-        self.insert_Moview_basic(movieId=movieId,movieName=title,score=rating_num,scoredNum=vote_num,type=type,
-                                 year=dateFormat,firstRegion= region,
-                                 director = director,url=url)
+        basicModel= [movieId,title,rating_num,vote_num,type,ReleaseDate,region,director,url]
+        self.insertMovieBasicModel(basicModel)
 
-        movie_model =[title,rating_num,vote_num,type,ReleaseDate,director,actor,stars5_percent,stars4_percent,stars3_percent,stars2_percent,stars1_percent]
+        percent = re.compile("\S\d%")
+        stars_percent = soup_detail.find("div", attrs = {"class":"rating_wrap clearbox"}).findAll(text=percent)
+        stars5_percent = stars_percent[0].strip()
+        stars4_percent = stars_percent[1].strip()
+        stars3_percent = stars_percent[2].strip()
+        stars2_percent = stars_percent[3].strip()
+        stars1_percent = stars_percent[4].strip()
+
+        starsModel =[movieId,title,rating_num,vote_num,
+                     stars5_percent,stars4_percent,stars3_percent,stars2_percent,stars1_percent]
+        self.insertMovieScoreModel(starsModel)
+
+
+
+        recommendations = soup_detail.findAll("div", attrs = {"class":"recommendations-bd"}).findAll("dd")
+        recommendations_MovieInfo_list = []
+        for movie_info_simple in recommendations.findAll("a"):
+            MovieTitle = movie_info_simple.string.strip()
+            MovieUrl = movie_info_simple.get('href')
+            MovieId = self.getMovieIdFromUrl(MovieUrl)
+            MovieInfo_list = [MovieTitle, MovieUrl, MovieId]
+            recommendations_MovieInfo_list.append(MovieInfo_list)
+
+        self.insertMovieSimilarModel(recommendations_MovieInfo_list)
+
+        movie_model =[title,rating_num,vote_num,type,ReleaseDate,director,actor,stars5_percent,stars4_percent,stars3_percent,stars2_percent,stars1_percent, recommendations_MovieInfo_list]
 
         return movie_model
 
@@ -241,7 +257,31 @@ class DoubanMovie(Base):
     # get movie through url
     def getMovieIdFromUrl(self,url):
         movieId = re.match(r'\d.*(?=/)',url)
+        movieId = filter(lambda x:x.isdigit(), url)
         return  movieId
+
+
+    #insert to mysql
+    def insertMovieBasicModel(self,basicModel):
+
+        # store data to mysql
+        #    def __init__(self,movieId,movieName,score,scoredNum,type,year,firstRegion,director,url):
+        self.insert_Moview_basic(movieId=basicModel[0],movieName=basicModel[1],score=basicModel[2],
+                                 scoredNum=basicModel[3],type=basicModel[4],
+                                 year=basicModel[5],firstRegion= basicModel[6],
+                                 director = basicModel[7],url=basicModel[8])
+
+
+
+    def insertMovieScoreModel(self,model):
+        pass
+
+
+    def insertMovieTagModel(self,model):
+        pass
+
+    def insertMovieSimilarModel(self,model):
+        pass
 
 
 

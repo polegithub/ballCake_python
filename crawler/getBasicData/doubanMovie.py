@@ -105,11 +105,11 @@ class DoubanMovie():
         for i in range(len(movie_tag_lists)):
             ws.append(wb.create_sheet(title=movie_tag_lists[i].decode())) #utf8->unicode
         for i in range(len(movie_tag_lists)):
-            ws[i].append(['序号','电影名','评分','评价人数','类型','年份','导演','演员','五星','四星','三星','二星','一星'])
+            ws[i].append(['序号','电影名','评分','评价人数','类型','年份','导演','演员','五星','四星','三星','二星','一星','推荐列表'])
             count = 1
             for bl in movie_lists[i]:
 
-                ws[i].append([count,bl[0],float(bl[1]),int(bl[2]),bl[3],(bl[4]),bl[5],bl[6],bl[7],bl[8],bl[9],bl[10],bl[11]])
+                ws[i].append([count,bl[0],float(bl[1]),int(bl[2]),bl[3],(bl[4]),bl[5],bl[6],bl[7],bl[8],bl[9],bl[10],bl[11],bl[12]])
                 count+=1
 
 
@@ -154,7 +154,12 @@ class DoubanMovie():
             type = "暂无"
 
         try:
-            ReleaseDate = soup_detail.find("span",attrs = {"property":"v:initialReleaseDate"}).string.strip()
+            ReleaseDate_lists = soup_detail.find("span",attrs = {"property":"v:initialReleaseDate"})
+            ReleaseDate_list = []
+            for i in range(0,len(ReleaseDate_lists)):
+                ReleaseDate = ReleaseDate_lists[i].string.strip()
+                ReleaseDate_list.append(ReleaseDate)
+            ReleaseDate = '/'.join(ReleaseDate_list)
         except:
             ReleaseDate = "暂无"
 
@@ -166,7 +171,7 @@ class DoubanMovie():
         try:
             vote_num = soup_detail.find("span",attrs = {"property":"v:votes"}).string.strip()
         except:
-            vote_num = "0"
+            vote_num = "目前无人评价"
         
         percent = re.compile("\S\d%")
         stars_percent = soup_detail.find("div", attrs = {"class":"rating_wrap clearbox"}).findAll(text=percent)
@@ -176,7 +181,16 @@ class DoubanMovie():
         stars2_percent = stars_percent[3].strip()
         stars1_percent = stars_percent[4].strip()
 
-        movie_model =[title,rating_num,vote_num,type,ReleaseDate,director,actor,stars5_percent,stars4_percent,stars3_percent,stars2_percent,stars1_percent]
+        recommendations = soup_detail.findAll("div", attrs = {"class":"recommendations-bd"}).findAll("dd")
+        recommendations_MovieInfo_list = []
+        for movie_info_simple in recommendations.findAll("a"):
+            MovieTitle = movie_info_simple.string.strip()
+            MovieUrl = movie_info_simple.get('href')
+            MovieId = filter(lambda x:x.isdigit(), MovieUrl)
+            MovieInfo_list = [MovieTitle, MovieUrl, MovieId]
+            recommendations_MovieInfo_list.append(MovieInfo_list)
+
+        movie_model =[title,rating_num,vote_num,type,ReleaseDate,director,actor,stars5_percent,stars4_percent,stars3_percent,stars2_percent,stars1_percent, recommendations_MovieInfo_list]
 
         return movie_model
 

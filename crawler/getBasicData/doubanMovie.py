@@ -6,6 +6,7 @@ import urllib
 import urllib2
 import requests
 import numpy as np
+import re
 from bs4 import BeautifulSoup
 from openpyxl import Workbook
 
@@ -104,11 +105,11 @@ class DoubanMovie(Base):
         for i in range(len(movie_tag_lists)):
             ws.append(wb.create_sheet(title=movie_tag_lists[i].decode())) #utf8->unicode
         for i in range(len(movie_tag_lists)):
-            ws[i].append(['序号','电影名','评分','评价人数','类型','年份','导演','演员'])
+            ws[i].append(['序号','电影名','评分','评价人数','类型','年份','导演','演员','五星','四星','三星','二星','一星'])
             count = 1
             for bl in movie_lists[i]:
 
-                ws[i].append([count,bl[0],float(bl[1]),int(bl[2]),bl[3],(bl[4]),bl[5],bl[6]])
+                ws[i].append([count,bl[0],float(bl[1]),int(bl[2]),bl[3],(bl[4]),bl[5],bl[6],b1[7],b1[8],b1[9],b1[10],b1[11]])
                 count+=1
 
 
@@ -167,7 +168,16 @@ class DoubanMovie(Base):
         except:
             vote_num = "暂无"
 
-        movie_model =[title,rating_num,vote_num,type,ReleaseDate,director,actor]
+        try:
+            percent = re.compile("\S\d%")
+            stars_percent = soup_detail.find("div", attrs = {"class":"rating_wrap clearbox"}).findAll(text=percent)
+            stars5_percent = stars_percent[0].strip()
+            stars4_percent = stars_percent[1].strip()
+            stars3_percent = stars_percent[2].strip()
+            stars2_percent = stars_percent[3].strip()
+            stars1_percent = stars_percent[4].strip()
+
+        movie_model =[title,rating_num,vote_num,type,ReleaseDate,director,actor,stars5_percent,stars4_percent,stars3_percent,stars2_percent,stars1_percent]
 
         return movie_model
 

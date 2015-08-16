@@ -109,7 +109,7 @@ class DoubanMovie():
             count = 1
             for bl in movie_lists[i]:
 
-                ws[i].append([count,bl[0],float(bl[1]),int(bl[2]),bl[3],(bl[4]),bl[5],bl[6],b1[7],b1[8],b1[9],b1[10],b1[11]])
+                ws[i].append([count,bl[0],float(bl[1]),int(bl[2]),bl[3],(bl[4]),bl[5],bl[6],bl[7],bl[8],bl[9],bl[10],bl[11]])
                 count+=1
 
 
@@ -161,21 +161,20 @@ class DoubanMovie():
         try:
             rating_num = soup_detail.find("strong",attrs = {"property":"v:average"}).string.strip()
         except:
-            rating_num = "暂无"
+            rating_num = "0.0"
 
         try:
             vote_num = soup_detail.find("span",attrs = {"property":"v:votes"}).string.strip()
         except:
-            vote_num = "暂无"
-
-        try:
-            percent = re.compile("\S\d%")
-            stars_percent = soup_detail.find("div", attrs = {"class":"rating_wrap clearbox"}).findAll(text=percent)
-            stars5_percent = stars_percent[0].strip()
-            stars4_percent = stars_percent[1].strip()
-            stars3_percent = stars_percent[2].strip()
-            stars2_percent = stars_percent[3].strip()
-            stars1_percent = stars_percent[4].strip()
+            vote_num = "0"
+        
+        percent = re.compile("\S\d%")
+        stars_percent = soup_detail.find("div", attrs = {"class":"rating_wrap clearbox"}).findAll(text=percent)
+        stars5_percent = stars_percent[0].strip()
+        stars4_percent = stars_percent[1].strip()
+        stars3_percent = stars_percent[2].strip()
+        stars2_percent = stars_percent[3].strip()
+        stars1_percent = stars_percent[4].strip()
 
         movie_model =[title,rating_num,vote_num,type,ReleaseDate,director,actor,stars5_percent,stars4_percent,stars3_percent,stars2_percent,stars1_percent]
 

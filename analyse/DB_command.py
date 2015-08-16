@@ -20,6 +20,11 @@ cursor.execute(sql)
 sql = "create table if not exists user(name varchar(128) primary key, created int(10))"
 cursor.execute(sql)
 
+#加字段
+sql = "alter table douban_book add (publisher text,author text,publishTime text,price text)"
+cursor.execute(sql)
+
+
 #写入
 sql = "insert into user(name,created) values(%s,%s)"
 param = ("aaa",int(time.time()))

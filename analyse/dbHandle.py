@@ -35,7 +35,7 @@ def do_init_db(dbType):
                 print('The table douban_book success!')
 
         try:
-                # sql = "alter table douban_book add (publisher text,author text,publishTime text,price text)"
+                sql = "alter table douban_book add (publisher text,author text,publishTime text,price text)"
                 sql = "alter table douban_book add (price text)"
                 curs.execute(sql)
         except:

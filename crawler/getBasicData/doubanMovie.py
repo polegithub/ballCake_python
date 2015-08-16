@@ -2,6 +2,7 @@
 
 import sys
 import time
+import datetime
 import urllib
 import urllib2
 import requests
@@ -19,8 +20,9 @@ sys.setdefaultencoding('utf8')
 
 
 class DoubanMovie(Base):
-    def __init__(self, session, start_id=1):
-        self.session = session
+    def __init__(self, session):
+        super(DoubanMovie, self).__init__(session)
+
         self.type = 2
 
 
@@ -28,7 +30,10 @@ class DoubanMovie(Base):
         #movie_tag_lists = ['爱情','喜剧','动画','科幻','剧情','动作']
         #movie_tag_lists = ['经典','悬疑','青春','犯罪','惊悚','文艺','纪录片']
         #movie_tag_lists=['励志','搞笑','恐怖','战争','短片','魔幻','传记']
-        movie_tag_lists = ['经典']
+
+        movie_tag_lists = ['搞笑']
+        print('start search list:%s' % (movie_tag_lists[0]))
+
         movie_lists = self.do_spider(movie_tag_lists)
         self.print_movie_lists_excel(movie_lists,movie_tag_lists)
 
@@ -52,9 +57,11 @@ class DoubanMovie(Base):
              {'User-Agent':'Mozilla/5.0 (Windows NT 6.2) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.12 Safari/535.11'},\
              {'User-Agent': 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)'}]
 
+        print('start movie_spider')
+
         while(page_num < 2):
             url="http://www.douban.com/tag/"+urllib.quote(movie_tag)+"/movie?start="+str(page_num*15)
-            time.sleep(np.random.rand()*2)
+            print('start get url',url)
 
             # #Last Version
             # try:
@@ -80,19 +87,34 @@ class DoubanMovie(Base):
             elif list_soup==None or len(list_soup)<=1:
                 break # Break when no informatoin got after 200 times requesting
 
+            temp = 1
+
             for movie_info in list_soup.findAll('dd'):
                 titleFull =movie_info.find('a', {'class':'title'})
 
                 title = titleFull.string.strip()
 
                 url = titleFull.get('href')
+
+                print("It's time to get detail:",url)
                 request = urllib2.Request(url)
                 soup_detail = self.getSoupWithUrl(request)
 
-                movie_model = self.getDetailModel(title,soup_detail)
+                if temp ==1:
+
+                    print('soup detail:',soup_detail)
+
+                temp+=1
+
+
+                movie_model = self.getDetailModel(title,url,soup_detail)
 
                 movie_list.append(movie_model)
                 try_times=0 #set 0 when got valid information
+
+                #chenglong
+                break;
+
             page_num += 1
             print "Downloading Information From Page %d" % page_num
         return movie_list
@@ -101,6 +123,7 @@ class DoubanMovie(Base):
     #打印到excel
     def print_movie_lists_excel(self,movie_lists,movie_tag_lists):
         wb=Workbook(optimized_write=True)
+        print('print_movie_lists_excel')
         ws=[]
         for i in range(len(movie_tag_lists)):
             ws.append(wb.create_sheet(title=movie_tag_lists[i].decode())) #utf8->unicode
@@ -108,8 +131,9 @@ class DoubanMovie(Base):
             ws[i].append(['序号','电影名','评分','评价人数','类型','年份','导演','演员','五星','四星','三星','二星','一星'])
             count = 1
             for bl in movie_lists[i]:
+                print('bl.len:',len(bl))
 
-                ws[i].append([count,bl[0],float(bl[1]),int(bl[2]),bl[3],(bl[4]),bl[5],bl[6],b1[7],b1[8],b1[9],b1[10],b1[11]])
+                # ws[i].append([count,bl[0],float(bl[1]),int(bl[2]),bl[3],(bl[4]),bl[5],bl[6],bl[7],bl[8],bl[9],bl[10],bl[11]])
                 count+=1
 
 
@@ -127,7 +151,7 @@ class DoubanMovie(Base):
 
 
     # 获取电影的详细信息
-    def getDetailModel(self,title,soup_detail):
+    def getDetailModel(self,title,url,soup_detail):
         try:
             director = soup_detail.find("a",attrs = {"rel":"v:directedBy"}).string.strip()
         except:
@@ -156,26 +180,45 @@ class DoubanMovie(Base):
         try:
             ReleaseDate = soup_detail.find("span",attrs = {"property":"v:initialReleaseDate"}).string.strip()
         except:
-            ReleaseDate = "暂无"
+            ReleaseDate = None
 
         try:
             rating_num = soup_detail.find("strong",attrs = {"property":"v:average"}).string.strip()
         except:
-            rating_num = "暂无"
+            rating_num = 0
 
         try:
             vote_num = soup_detail.find("span",attrs = {"property":"v:votes"}).string.strip()
         except:
-            vote_num = "暂无"
+            vote_num = 0
 
         try:
-            percent = re.compile("\S\d%")
+            percent = re.compile("\s\d%")
             stars_percent = soup_detail.find("div", attrs = {"class":"rating_wrap clearbox"}).findAll(text=percent)
             stars5_percent = stars_percent[0].strip()
             stars4_percent = stars_percent[1].strip()
             stars3_percent = stars_percent[2].strip()
             stars2_percent = stars_percent[3].strip()
             stars1_percent = stars_percent[4].strip()
+        except:
+            stars5_percent = 0
+            stars4_percent = 0
+            stars3_percent = 0
+            stars2_percent = 0
+            stars1_percent = 0
+
+        dateAndRegion = ReleaseDate.split('(')
+
+        dateFormat =datetime.datetime.strptime(dateAndRegion[0],'%Y-%m-%d')
+        dateInterval = time.mktime(dateFormat.timetuple())
+
+        region = dateAndRegion[1]
+        movieId = self.getMovieIdFromUrl(url)
+
+        # store data to mysql
+        self.insert_Moview_basic(movieId=movieId,movieName=title,score=rating_num,scoredNum=vote_num,type=type,
+                                 year=dateFormat,firstRegion= region,
+                                 director = director,url=url)
 
         movie_model =[title,rating_num,vote_num,type,ReleaseDate,director,actor,stars5_percent,stars4_percent,stars3_percent,stars2_percent,stars1_percent]
 
@@ -194,5 +237,12 @@ class DoubanMovie(Base):
         soup = BeautifulSoup(plain_text_detail)
 
         return soup
+
+    # get movie through url
+    def getMovieIdFromUrl(self,url):
+        movieId = re.match(r'\d.*(?=/)',url)
+        return  movieId
+
+
 
 

@@ -1,6 +1,4 @@
-#coding = utf-8
-__author__ = 'chengpoleness'
-
+#-*- coding: UTF-8 -*-
 
 import time
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, Text
@@ -17,10 +15,10 @@ class Booker(Base):
 
     __tablename__ = table_DB_book
 
-    id = Column(String(),primary_key=True)
+    id = Column(Integer, primary_key=True, nullable=False, index=True)
     bookName = Column(String())
     score = Column(String())
-    scoredNum = Column(int())
+    scoredNum =  Column(Integer)
     author = Column(String())
     publisher = Column(String())
     publishTime = Column(String())
@@ -29,7 +27,6 @@ class Booker(Base):
     update_time = Column(Integer, default=int(time.time()))
 
     def __init__(self,id,bookName,score,scoredNum,author,publisher,publishTime,price):
-        self.id = id
         self.bookName = bookName
         self.score = score
         self.scoredNum = scoredNum
@@ -43,39 +40,43 @@ class Booker(Base):
         return '<bookName: %r>' % self.bookName
 
 
-# 序号','电影名','评分','评价人数','类型','年份','导演',‘豆瓣链接’
+ # 序号','电影名','评分','评价人数','类型','年份','导演',‘豆瓣链接’
 class MovieBasicInfo(Base):
     __tablename__ = table_DB_movie_basic
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True, nullable=False, index=True)
     movieId = Column(Integer, primary_key=True, nullable=False)
     movieName = Column(String(collation="utf8_unicode_ci"), nullable=False)
-    score = Column(float,default=0)
-    scoredNumber = Column(Integer, nullable=True)
-    type = Column(String(collation='utf8_unicode_ci'),nullable=False)
-    year = Column(String(collation='utf8_unicode_ci'),nullable=False)
+    score = Column(Float,default=0)
+    scoredCount = Column(Integer, nullable=True)
+    movieType = Column(String(collation='utf8_unicode_ci'),nullable=False)
+    releaseYear = Column(String(collation='utf8_unicode_ci'),nullable=False)
     director = Column(String(collation='utf8_unicode_ci'),nullable=False)
     dou_url =  Column(String(collation='utf8_unicode_ci'),nullable=False)
 
     create_time = Column(Integer, default=int(time.time()))
     update_time = Column(Integer, default=int(time.time()))
 
-    def __init__(self,id,movieId,movieName,score,scoredNum,type,year,director,url):
-        self.id = id
+    def __init__(self,movieId,movieName,score,scoredNum,type,year,firstRegion,director,url,create_time,update_time):
         self.movieName = movieName
+        self.movieId = movieId
         self.score = score
-        self.scoredNumber = scoredNum
-        self.type = type
-        self.year = year
+        self.scoredCount = scoredNum
+        self.movieType = type
+        self.releaseYear = year
+        self.firstRegion =firstRegion
         self.director = director
         self.dou_url = url
+        self.create_time = create_time
+        self.update_time = update_time
+
 
     def __repr__(self):
         return '<movieName: %r>' %self.movieName
 
 # 序号','电影名',标签
 class MovieTagInfo(Base):
-    __tablename__ = table_DB_movie_basic
+    __tablename__ = table_DB_movie_tag
 
     id =        Column(Integer, primary_key=True, nullable=False)
     movieId =   Column(Integer, primary_key=True, nullable=False)
@@ -96,8 +97,10 @@ class MovieTagInfo(Base):
     create_time = Column(Integer, default=int(time.time()))
     update_time = Column(Integer, default=int(time.time()))
 
-    def __init__(self,id,movieId,movieName,judgeTag1,judgeTag2,judgeTag3,judgeTag4,judgeTag5,typeTag1,typeTag2,typeTag3,typeTag4,typeTag5):
-        self.id = id
+    def __init__(self,movieId,movieName,judgeTag1,judgeTag2,judgeTag3,judgeTag4,
+                 judgeTag5,
+                 typeTag1,typeTag2,typeTag3,typeTag4,typeTag5,
+                 create_time,update_time):
         self.movieName = movieName
         self.movieId = movieId
         self.judgeTag1 = judgeTag1
@@ -111,6 +114,9 @@ class MovieTagInfo(Base):
         self.typeTag3 = typeTag3
         self.typeTag4 = typeTag4
         self.typeTag5 = typeTag5
+
+        self.create_time = create_time
+        self.update_time = update_time
 
 
     def __repr__(self):

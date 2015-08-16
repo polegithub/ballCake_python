@@ -8,8 +8,8 @@ import requests
 import numpy as np
 from bs4 import BeautifulSoup
 from openpyxl import Workbook
-from crawler.directory.directoryManager import contentClass
 
+from crawler.getBasicData.base import *
 from crawler.directory.directoryManager import contentClass
 
 reload(sys)
@@ -17,7 +17,7 @@ sys.setdefaultencoding('utf8')
 
 
 
-class DoubanMovie():
+class DoubanMovie(Base):
     def __init__(self, session, start_id=1):
         self.session = session
         self.type = 2

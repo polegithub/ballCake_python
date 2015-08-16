@@ -9,17 +9,6 @@ from config.config import *
 
 Base  = declarative_base()
 
-class Booker(Base):
-
-    __tablename__ = table_DB_book
-    id = Column(String(),primary_key=True)
-    bookName = Column(String())
-    score = Column(String())
-    scoredNum = Column(int())
-    author = Column(String())
-    publisher = Column(String())
-    publishTime = Column(String())
-    price = Column(String())
 
     # def __init__(self,session,BookId,name,score,scoredNum,author,publisher,pubslishTime,price):
     #

@@ -3,7 +3,6 @@ __author__ = 'chengpoleness'
 #coding = utf-8
 
 
-#coding = utf-8
 
 
 from sqlalchemy.orm import sessionmaker

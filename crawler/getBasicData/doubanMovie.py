@@ -122,6 +122,10 @@ class DoubanMovie(Base):
 
     #打印到excel
     def print_movie_lists_excel(self,movie_lists,movie_tag_lists):
+        """
+
+        :rtype : object
+        """
         wb=Workbook(optimized_write=True)
         print('print_movie_lists_excel')
         ws=[]

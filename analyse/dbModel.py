@@ -124,5 +124,86 @@ class MovieTagInfo(Base):
 
 
 #同类影片 - chunke建一下
+#'序号', '电影名', '推荐电影'
+class RecommendationMovieInfo(Base):
+    __tablename__ = table_DB_recommendation_movie
+
+    id = Column(Integer, primary_key=True, nullable=False)
+    movieId = Column(Integer, primary_key=True, nullable=False)
+    movieName = Column(String(collation='utf8_unicode_ci'),nullable=False)
+    recommendationmovie1 = Column(String(collation='utf8_unicode_ci'),nullable=False)
+    recommendationmovie2 = Column(String(collation='utf8_unicode_ci'),nullable=False)
+    recommendationmovie3 = Column(String(collation='utf8_unicode_ci'),nullable=False)
+    recommendationmovie4 = Column(String(collation='utf8_unicode_ci'),nullable=False)
+    recommendationmovie5 = Column(String(collation='utf8_unicode_ci'),nullable=False)
+    recommendationmovie6 = Column(String(collation='utf8_unicode_ci'),nullable=False)
+    recommendationmovie7 = Column(String(collation='utf8_unicode_ci'),nullable=False)
+    recommendationmovie8 = Column(String(collation='utf8_unicode_ci'),nullable=False)
+    recommendationmovie9 = Column(String(collation='utf8_unicode_ci'),nullable=False)
+    recommendationmovie10 = Column(String(collation='utf8_unicode_ci'),nullable=False)
+
+
+
+    create_time = Column(Integer, default=int(time.time()))
+    update_time = Column(Integer, default=int(time.time()))
+
+#多行对齐还没有做好
+    def __init__(self, movieId, movieName, recommendationmovie1, recommendationmovie2, recommendationmovie3, recommendationmovie4, recommendationmovie5, recommendationmovie6, recommendationmovie7, recommendationmovie8, recommendationmovie9, recommendationmovie10, create_time, update_time):
+        self.movieId = movieId
+        self.movieName = movieName
+        self.recommendationmovie1 = recommendationmovie1
+        self.recommendationmovie2 = recommendationmovie2
+        self.recommendationmovie3 = recommendationmovie3
+        self.recommendationmovie4 = recommendationmovie4
+        self.recommendationmovie5 = recommendationmovie5
+        self.recommendationmovie6 = recommendationmovie6
+        self.recommendationmovie7 = recommendationmovie7
+        self.recommendationmovie8 = recommendationmovie8
+        self.recommendationmovie9 = recommendationmovie9
+        self.recommendationmovie10 = recommendationmovie10
+
+        self.create_time = create_time
+        self.update_time = update_time
+
+
+    def __repr__(self):
+        return '<movieName: %r>' % self.movieName
+
 
 #评分建表 id,moviewId,totalScore,totalNum,FiveScore,FourScore,ThreeScore,TwoScore,OneScore
+#'序号', '电影名', '评分'
+class MovieScoreInfo(Base):
+    __tablename__ = table_DB_movie_score
+
+    id = Column(Integer, primary_key = True, nullable = False)
+    movieId = Column(Integer, primary_key = True, nullable = False)
+    movieName = Column(String(collation='utf8_unicode_ci'),nullable=False)
+    totalScore = Column(Float, default = 0)
+    totalNum = Column(Integer, nullable = True)
+    FiveScore = Column(String(collation='utf8_unicode_ci'),nullable=True)
+    FourScore = Column(String(collation='utf8_unicode_ci'),nullable=True)
+    ThreeScore = Column(String(collation='utf8_unicode_ci'),nullable=True)
+    TwoScore = Column(String(collation='utf8_unicode_ci'),nullable=True)
+    OneScore = Column(String(collation='utf8_unicode_ci'),nullable=True)
+
+
+    create_time = Column(Integer, default=int(time.time()))
+    update_time = Column(Integer, default=int(time.time()))
+
+    def __init__(self, movieId, movieName, totalScore, totalNum, FiveScore, FourScore, ThreeScore, TwoScore, OneScore, create_time, update_time):
+        self.movieId = movieId
+        self.movieName = movieName
+        self.totalScore = totalScore
+        self.totalNum = totalNum
+        self.FiveScore = FiveScore
+        self.FourScore = FourScore
+        self.ThreeScore = ThreeScore
+        self.TwoScore = TwoScore
+        self.OneScore = OneScore
+
+        self.create_time = create_time
+        self.update_time = update_time
+
+
+    def __repr__(self):
+        return '<movieName: %r>' % self.movieName

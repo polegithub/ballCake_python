@@ -10,8 +10,8 @@ from bs4 import BeautifulSoup
 from openpyxl import Workbook
 
 from crawler.directory.directoryManager import contentClass
-from  analyse.dbHandle import do_init_db
-from  analyse.dbHandle import saveDataForDouban
+from  analyse.dbHandleBySql import do_init_db
+from  analyse.dbHandleBySql import saveDataForDouban
 
 reload(sys)
 sys.setdefaultencoding('utf8')

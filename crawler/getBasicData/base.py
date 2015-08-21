@@ -1,3 +1,4 @@
+#-*- coding: UTF-8 -*-
 __author__ = 'chengpoleness'
 
 
@@ -9,7 +10,7 @@ from sqlalchemy import and_
 from bs4 import BeautifulSoup
 # from lib.decorator import roll_back
 #
-from analyse.dbModel import MovieBasicInfo,MovieTagInfo
+from analyse.dbModel import MovieBasicInfo,MovieTagInfo,RecommendationMovieInfo,MovieScoreInfo
 
 __metaclass__ = type
 
@@ -26,6 +27,8 @@ class Base:
     #     proxy = self.session.query(Proxy).filter_by(type='HTTP').all()
     #     return proxy
 
+
+    #基本信息
     def insert_Moview_basic(self,movieId,movieName,score,scoredNum,type,year,firstRegion,director,url):
 
             if self.query_Movie_basic_by_movieId(movieId) is None:
@@ -37,7 +40,6 @@ class Base:
                 self.session.add(movieModel)
                 self.session.commit()
 
-
     def query_Movie_basic_by_movieId(self, movieId):
         return self.session.query(MovieBasicInfo).filter_by(movieId=movieId).first()
 
@@ -47,7 +49,8 @@ class Base:
     #     return self.session.query(MovieBasicInfo).filter_by(movieid=moviewId).first()
 
 
-    def insert_Moview_tag(self,movieId,movieName,judgeTag1,judgeTag2,judgeTag3,judgeTag4,judgeTag5,
+    #电影标签
+    def insert_Movie_tag(self,movieId,movieName,judgeTag1,judgeTag2,judgeTag3,judgeTag4,judgeTag5,
                           typeTag1,typeTag2,typeTag3,typeTag4,typeTag5):
 
             if self.query_Movie_by_moviewId(movieId) is None:
@@ -63,4 +66,33 @@ class Base:
         return self.session.query(MovieTagInfo).filter_by(movieId=movieId).first()
 
 
-    # @roll_back
+    # 同类推荐
+    def insert_Movie_recommendMovieId(self,movieId,moviewNewId):
+        movieNew = self.query_Movie_left_recommend_place(movieId)
+        if movieNew is not  None:
+            movieModel = RecommendationMovieInfo(movieNew = moviewNewId)
+            self.session.add(movieModel)
+            self.session.commit()
+
+
+    def query_Movie_left_recommend_place(self,movieId):
+        for i in range(1,10):
+            movieNew = str('recommendMovie%s',i)
+            result = self.session.query(RecommendationMovieInfo).movieNew.filter_by(movieId = movieId )
+            if result is None:
+                return movieNew
+
+    #得分
+    def insert_Movie_Score(self,movieId,movieName,totalScore,totalNum,
+                          FiveScore,FourScore,ThreeScore,TwoScore,OneScore,):
+        if self.query_Movie_Score_by_movieId(movieId) is None:
+            movieModel = MovieScoreInfo(movieId = movieId,movieName = movieName,totalScore= totalScore,FiveScore= FiveScore,FourScore=FourScore,
+                                        ThreeScore= ThreeScore,TwoScore=TwoScore,OneScore=OneScore,
+                                        create_time=int(time.time()),update_time=int(time.time()))
+            self.session.add(movieModel)
+            self.session.commit()
+
+
+    def query_Movie_Score_by_movieId(self,movieId):
+        return self.session.query(MovieScoreInfo).filter_by(movieId = movieId).first()
+

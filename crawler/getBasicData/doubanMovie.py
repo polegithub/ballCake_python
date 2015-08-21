@@ -203,13 +203,17 @@ class DoubanMovie(Base):
         except:
             vote_num = 0
 
+        dateAndRegion = ''
+        region =''
 
-        dateAndRegion = ReleaseDate.split('(')
+        if ReleaseDate:
+            dateAndRegion = ReleaseDate.split('(')
+            if dateAndRegion:
+                dateFormat =datetime.datetime.strptime(dateAndRegion[0],'%Y-%m-%d')
+                dateInterval = time.mktime(dateFormat.timetuple())
 
-        dateFormat =datetime.datetime.strptime(dateAndRegion[0],'%Y-%m-%d')
-        dateInterval = time.mktime(dateFormat.timetuple())
+                region = dateAndRegion[1]
 
-        region = dateAndRegion[1]
         movieId = self.getMovieIdFromUrl(url)
 
         basicModel= [movieId,title,rating_num,vote_num,type,ReleaseDate,region,director,url]
@@ -234,11 +238,15 @@ class DoubanMovie(Base):
         for movie_info_simple in recommendations.findAll("a"):
             MovieTitle = movie_info_simple.string.strip()
             MovieUrl = movie_info_simple.get('href')
-            MovieId = self.getMovieIdFromUrl(MovieUrl)
-            MovieInfo_list = [MovieTitle, MovieUrl, MovieId]
+            MovieIdNew = self.getMovieIdFromUrl(MovieUrl)
+            MovieInfo_list = [MovieTitle, MovieUrl, MovieIdNew]
             recommendations_MovieInfo_list.append(MovieInfo_list)
 
-        self.insertMovieSimilarModel(recommendations_MovieInfo_list)
+
+        for movieIdNew in recommendations_MovieInfo_list:
+
+            self.insertMovieSimilarModel(movieId,movieIdNew)
+
 
         movie_model =[title,rating_num,vote_num,type,ReleaseDate,director,actor,stars5_percent,stars4_percent,stars3_percent,stars2_percent,stars1_percent, recommendations_MovieInfo_list]
 
@@ -278,14 +286,18 @@ class DoubanMovie(Base):
 
 
     def insertMovieScoreModel(self,model):
-        pass
-
+        self.insert_Movie_Score(movieId=model[0],movieName=model[1],totalScore=model[2],totalNum=[3],
+                                FiveScore=model[4],FourScore=model[5],ThreeScore=model[6],TwoScore=model[7],
+                                OneScore=model[8])
 
     def insertMovieTagModel(self,model):
-        pass
+        #待完善
+        self.insert_Movie_tag()
 
-    def insertMovieSimilarModel(self,model):
-        pass
+
+    def insertMovieSimilarModel(self,movieId,recommendId):
+        self.insert_Movie_recommendMovieId(movieId=movieId,moviewNewId=recommendId)
+
 
 
 

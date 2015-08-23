@@ -233,9 +233,10 @@ class DoubanMovie(Base):
 
 
 
-        recommendations = soup_detail.findAll("div", attrs = {"class":"recommendations-bd"}).findAll("dd")
+        recommendations = soup_detail.select("dd > a")
+        MovieInfo_list = []
         recommendations_MovieInfo_list = []
-        for movie_info_simple in recommendations.findAll("a"):
+        for movie_info_simple in recommendations:
             MovieTitle = movie_info_simple.string.strip()
             MovieUrl = movie_info_simple.get('href')
             MovieIdNew = self.getMovieIdFromUrl(MovieUrl)

@@ -41,8 +41,9 @@ class DoubanMovie(Base):
         movie_lists=[]
         for movie_tag in movie_tag_lists:
             movie_list = self.movie_spider(movie_tag)
-            movie_list = sorted(movie_list,key=lambda x:x[1],reverse=True)
-            movie_lists.append(movie_list)
+            if movie_list:
+                movie_list = sorted(movie_list,key=lambda x:x[1],reverse=True)
+                movie_lists.append(movie_list)
         return movie_lists
 
 
@@ -100,11 +101,11 @@ class DoubanMovie(Base):
                 request = urllib2.Request(url)
                 soup_detail = self.getSoupWithUrl(request)
 
-                if temp ==1:
+                # if temp ==1:
 
-                    print('soup detail:',soup_detail)
+                    # print('soup detail:',soup_detail)
 
-                temp+=1
+                # temp+=1
 
 
                 movie_model = self.getDetailModel(title,url,soup_detail)
@@ -232,15 +233,19 @@ class DoubanMovie(Base):
         self.insertMovieScoreModel(starsModel)
 
 
-
-        recommendations = soup_detail.findAll("div", attrs = {"class":"recommendations-bd"}).findAll("dd")
+        #soup 使用findall之后不可再使用findall（因为findall的结果是resultset,不再是soup了）
+        recommendationsIngfo = soup_detail.find("div", attrs = {"class":"recommendations-bd"})
+        recommendations = recommendationsIngfo.find("dd")
         recommendations_MovieInfo_list = []
-        for movie_info_simple in recommendations.findAll("a"):
-            MovieTitle = movie_info_simple.string.strip()
-            MovieUrl = movie_info_simple.get('href')
-            MovieIdNew = self.getMovieIdFromUrl(MovieUrl)
-            MovieInfo_list = [MovieTitle, MovieUrl, MovieIdNew]
-            recommendations_MovieInfo_list.append(MovieInfo_list)
+        if recommendations:
+             findAllList =recommendations.findAll("a")
+        if findAllList:
+            for movie_info_simple in findAllList:
+                MovieTitle = movie_info_simple.string.strip()
+                MovieUrl = movie_info_simple.get('href')
+                MovieIdNew = self.getMovieIdFromUrl(MovieUrl)
+                MovieInfo_list = [MovieTitle, MovieUrl, MovieIdNew]
+                recommendations_MovieInfo_list.append(MovieInfo_list)
 
 
         for movieIdNew in recommendations_MovieInfo_list:
@@ -262,7 +267,10 @@ class DoubanMovie(Base):
         except (urllib2.HTTPError, urllib2.URLError), e:
             print e
 
-        soup = BeautifulSoup(plain_text_detail)
+        if plain_text_detail:
+            soup = BeautifulSoup(plain_text_detail)
+        else:
+            soup = None
 
         return soup
 
@@ -286,6 +294,7 @@ class DoubanMovie(Base):
 
 
     def insertMovieScoreModel(self,model):
+        print ('score:',model)
         self.insert_Movie_Score(movieId=model[0],movieName=model[1],totalScore=model[2],totalNum=[3],
                                 FiveScore=model[4],FourScore=model[5],ThreeScore=model[6],TwoScore=model[7],
                                 OneScore=model[8])

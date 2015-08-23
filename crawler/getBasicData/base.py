@@ -77,7 +77,8 @@ class Base:
 
     def query_Movie_left_recommend_place(self,movieId):
         for i in range(1,10):
-            movieNew = str('recommendMovie%s',i)
+            index = str(i)
+            movieNew = 'recommendMovie'+index
             result = self.session.query(RecommendationMovieInfo).movieNew.filter_by(movieId = movieId )
             if result is None:
                 return movieNew
@@ -86,7 +87,7 @@ class Base:
     def insert_Movie_Score(self,movieId,movieName,totalScore,totalNum,
                           FiveScore,FourScore,ThreeScore,TwoScore,OneScore,):
         if self.query_Movie_Score_by_movieId(movieId) is None:
-            movieModel = MovieScoreInfo(movieId = movieId,movieName = movieName,totalScore= totalScore,FiveScore= FiveScore,FourScore=FourScore,
+            movieModel = MovieScoreInfo(movieId = movieId,movieName = movieName,totalScore= totalScore,totalNum=totalNum,FiveScore= FiveScore,FourScore=FourScore,
                                         ThreeScore= ThreeScore,TwoScore=TwoScore,OneScore=OneScore,
                                         create_time=int(time.time()),update_time=int(time.time()))
             self.session.add(movieModel)

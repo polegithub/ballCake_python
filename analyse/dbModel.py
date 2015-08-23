@@ -167,7 +167,7 @@ class RecommendationMovieInfo(Base):
 
 
     def __repr__(self):
-        return '<movieName: %r>' % self.movieId
+        return '<movieId: %r>' % self.movieId
 
 
 #评分建表 id,moviewId,totalScore,totalNum,FiveScore,FourScore,ThreeScore,TwoScore,OneScore

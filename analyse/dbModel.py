@@ -16,13 +16,13 @@ class Booker(Base):
     __tablename__ = table_DB_book
 
     id = Column(Integer, primary_key=True, nullable=False, index=True)
-    bookName = Column(String())
-    score = Column(String())
+    bookName = Column(String(40,collation='utf8_unicode_ci'),nullable=True)
+    score = Column(String(40,collation='utf8_unicode_ci'),nullable=True)
     scoredNum =  Column(Integer)
-    author = Column(String())
-    publisher = Column(String())
-    publishTime = Column(String())
-    price = Column(String())
+    author = Column(String(40,collation='utf8_unicode_ci'),nullable=True)
+    publisher = Column(String(40,collation='utf8_unicode_ci'),nullable=True)
+    publishTime =  Column(Integer)
+    price =Column(String(40,collation='utf8_unicode_ci'),nullable=True)
     create_time = Column(Integer, default=int(time.time()))
     update_time = Column(Integer, default=int(time.time()))
 
@@ -79,41 +79,22 @@ class MovieTagInfo(Base):
     __tablename__ = table_DB_movie_tag
 
     id =        Column(Integer, primary_key=True, nullable=False)
-    movieId =   Column(Integer, primary_key=True, nullable=False)
+    movieId =   Column(Integer, nullable=False)
     movieName = Column(String(40,collation="utf8_unicode_ci"),nullable=True)
-    judgeTag1 = Column(String(40,collation='utf8_unicode_ci'),nullable=True)
-    judgeTag2 = Column(String(40,collation='utf8_unicode_ci'),nullable=True)
-    judgeTag3 = Column(String(40,collation='utf8_unicode_ci'),nullable=True)
-    judgeTag4 = Column(String(40,collation='utf8_unicode_ci'),nullable=True)
-    judgeTag5 = Column(String(40,collation='utf8_unicode_ci'),nullable=True)
-    typeTag1 =  Column(String(40,collation='utf8_unicode_ci'),nullable=True)
-    typeTag2 =  Column(String(40,collation='utf8_unicode_ci'),nullable=True)
-    typeTag3 =  Column(String(40,collation='utf8_unicode_ci'),nullable=True)
-    typeTag4 =  Column(String(40,collation='utf8_unicode_ci'),nullable=True)
-    typeTag5 =  Column(String(40,collation='utf8_unicode_ci'),nullable=True)
-
-
+    movietag = Column(String(40,collation='utf8_unicode_ci'),nullable=True)
+    tagIndex = Column(Integer,nullable = False)
+    tagType = Column(Integer,nullable = False) # tag的类型，待定义
 
     create_time = Column(Integer, default=int(time.time()))
     update_time = Column(Integer, default=int(time.time()))
 
-    def __init__(self,movieId,movieName,judgeTag1,judgeTag2,judgeTag3,judgeTag4,
-                 judgeTag5,
-                 typeTag1,typeTag2,typeTag3,typeTag4,typeTag5,
+    def __init__(self,movieId,movieName,tag,index,type,
                  create_time,update_time):
         self.movieName = movieName
         self.movieId = movieId
-        self.judgeTag1 = judgeTag1
-        self.judgeTag2 = judgeTag2
-        self.judegTag3 = judgeTag3
-        self.judgeTag4 = judgeTag4
-        self.judgeTag5 = judgeTag5
-
-        self.typeTag1 = typeTag1
-        self.typeTag2 = typeTag2
-        self.typeTag3 = typeTag3
-        self.typeTag4 = typeTag4
-        self.typeTag5 = typeTag5
+        self.movietag = tag
+        self.tagIndex = index
+        self.tagType = type
 
         self.create_time = create_time
         self.update_time = update_time
@@ -130,38 +111,17 @@ class RecommendationMovieInfo(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     movieId = Column(Integer, primary_key=True, nullable=False)
     # movieName = Column(String(collation='utf8_unicode_ci'),nullable=False)
-    recommendMovie1 =  Column(String(40),nullable=True)
-    recommendMovie2 =  Column(String(40),nullable=True)
-    recommendMovie3 =  Column(String(40),nullable=True)
-    recommendMovie4 =  Column(String(40),nullable=True)
-    recommendMovie5 =  Column(String(40),nullable=True)
-    recommendMovie6 =  Column(String(40),nullable=True)
-    recommendMovie7 =  Column(String(40),nullable=True)
-    recommendMovie8 =  Column(String(40),nullable=True)
-    recommendMovie9 =  Column(String(40),nullable=True)
-    recommendMovie10 = Column(String(40),nullable=True)
-
-
+    recommendMovieId =  Column(String(40),nullable=True)
+    index =Column(Integer, nullable=False)
 
     create_time = Column(Integer, default=int(time.time()))
     update_time = Column(Integer, default=int(time.time()))
 
-#多行对齐还没有做好
-    def __init__(self, movieId, movieId1, movieId2, movieId3, movieId4, movieId5,
-                 movieId6, movieId7, movieId8, movieId9, movieId10, create_time, update_time):
+    def __init__(self, movieId, recommendMovieId,index,create_time, update_time):
         self.movieId = movieId
         # self.movieName = movieName
-        self.recommendMovie1 = movieId1
-        self.recommendMovie2 = movieId2
-        self.recommendMovie3 = movieId3
-        self.recommendMovie4 = movieId4
-        self.recommendMovie5 = movieId5
-        self.recommendMovie6 = movieId6
-        self.recommendMovie7 = movieId7
-        self.recommendMovie8 = movieId8
-        self.recommendMovie9 = movieId9
-        self.recommendMovie10 = movieId10
-
+        self.recommendMovieId = recommendMovieId
+        self.index  = index
         self.create_time = create_time
         self.update_time = update_time
 

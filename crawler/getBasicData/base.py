@@ -50,38 +50,32 @@ class Base:
 
 
     #电影标签
-    def insert_Movie_tag(self,movieId,movieName,judgeTag1,judgeTag2,judgeTag3,judgeTag4,judgeTag5,
-                          typeTag1,typeTag2,typeTag3,typeTag4,typeTag5):
+    def insert_Movie_tag(self,movieId,movieName,tag,index,tagType):
 
-            if self.query_Movie_by_moviewId(movieId) is None:
+            if self.query_Movie_by_moviewId(movieId,index) is None:
                 movieModel  = MovieTagInfo(movieId = movieId,movieName = movieName,
-                                             judgeTag1 =judgeTag1,judgeTag2 =judgeTag2,judgeTag3 =judgeTag3,
-                                             judgeTag4 =judgeTag4,judgeTag5 =judgeTag5,typeTag1 =typeTag1,
-                                             typeTag2 =typeTag2,typeTag3 =typeTag3,typeTag4 =typeTag4,typeTag5 =typeTag5,
-                                             create_time=int(time.time()), update_time=int(time.time()))
+                                           tag=tag,index= index,tagType = tagType,
+                                           create_time=int(time.time()), update_time=int(time.time()))
                 self.session.add(movieModel)
                 self.session.commit()
 
-    def query_Movie_tag_by_movieId(self, movieId):
-        return self.session.query(MovieTagInfo).filter_by(movieId=movieId).first()
+    def query_Movie_tag_by_movieId(self, movieId,index):
+        return self.session.query(MovieTagInfo).filter_by(movieId=movieId,tagIndex=index).first()
 
 
     # 同类推荐
-    def insert_Movie_recommendMovieId(self,movieId,moviewNewId):
-        movieNew = self.query_Movie_left_recommend_place(movieId)
-        if movieNew is not  None:
-            movieModel = RecommendationMovieInfo(movieNew = moviewNewId)
+    def insert_Movie_recommendMovieId(self,movieId,moviewNewId,index):
+        movieNew = self.query_Movie_left_recommend_place(movieId,index)
+        if movieNew is None:
+            movieModel = RecommendationMovieInfo(movieId =movieId,recommendMovieId = moviewNewId,index = index,
+                                                 create_time=int(time.time()),update_time=int(time.time()))
             self.session.add(movieModel)
             self.session.commit()
 
 
-    def query_Movie_left_recommend_place(self,movieId):
-        for i in range(1,10):
-            index = str(i)
-            movieNew = 'recommendMovie'+index
-            result = self.session.query(RecommendationMovieInfo).movieNew.filter_by(movieId = movieId )
-            if result is None:
-                return movieNew
+    def query_Movie_left_recommend_place(self,movieId,index):
+        result = self.session.query(RecommendationMovieInfo).filter_by(movieId = movieId,index = index).first()
+        return result
 
     #得分
     def insert_Movie_Score(self,movieId,movieName,totalScore,totalNum,

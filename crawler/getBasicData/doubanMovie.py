@@ -239,18 +239,20 @@ class DoubanMovie(Base):
         recommendations_MovieInfo_list = []
         if recommendations:
              findAllList =recommendations.findAll("a")
+
         if findAllList:
+            index =1
+
             for movie_info_simple in findAllList:
-                MovieTitle = movie_info_simple.string.strip()
-                MovieUrl = movie_info_simple.get('href')
-                MovieIdNew = self.getMovieIdFromUrl(MovieUrl)
-                MovieInfo_list = [MovieTitle, MovieUrl, MovieIdNew]
-                recommendations_MovieInfo_list.append(MovieInfo_list)
+                movieTitle = movie_info_simple.string.strip()
+                movieUrl = movie_info_simple.get('href')
+                movieIdNew = self.getMovieIdFromUrl(movieUrl)
+                movieInfo_list = [movieTitle, movieUrl, movieIdNew]
+                recommendations_MovieInfo_list.append(movieInfo_list)
 
+                self.insertMovieSimilarModel(movieId,movieIdNew,index)
 
-        for movieIdNew in recommendations_MovieInfo_list:
-
-            self.insertMovieSimilarModel(movieId,movieIdNew)
+                index+=1
 
 
         movie_model =[title,rating_num,vote_num,type,ReleaseDate,director,actor,stars5_percent,stars4_percent,stars3_percent,stars2_percent,stars1_percent, recommendations_MovieInfo_list]
@@ -294,18 +296,18 @@ class DoubanMovie(Base):
 
 
     def insertMovieScoreModel(self,model):
-        print ('score:',model)
-        self.insert_Movie_Score(movieId=model[0],movieName=model[1],totalScore=model[2],totalNum=[3],
+        print ('score:',model,)
+        self.insert_Movie_Score(movieId=model[0],movieName=model[1],totalScore=model[2],totalNum=model[3],
                                 FiveScore=model[4],FourScore=model[5],ThreeScore=model[6],TwoScore=model[7],
                                 OneScore=model[8])
 
-    def insertMovieTagModel(self,model):
-        #待完善
-        self.insert_Movie_tag()
+    def insertMovieTagModel(self,movieId,movieName,tag,index,tagType):
+
+        self.insert_Movie_tag(movieId=movieId,movieName=movieName,tag=tag,index=index,tagType=tagType)
 
 
-    def insertMovieSimilarModel(self,movieId,recommendId):
-        self.insert_Movie_recommendMovieId(movieId=movieId,moviewNewId=recommendId)
+    def insertMovieSimilarModel(self,movieId,recommendId,index):
+        self.insert_Movie_recommendMovieId(movieId=movieId,moviewNewId=recommendId,index = index)
 
 
 

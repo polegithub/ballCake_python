@@ -1,8 +1,6 @@
-__author__ = 'chengpoleness'
-
 #coding = utf-8
 
-
+__author__ = 'chengpoleness'
 
 
 from sqlalchemy.orm import sessionmaker
@@ -14,7 +12,7 @@ from config.config import *
 class Factory:
 
     def __init__(self):
-        session = sessionmaker(bind=create_engine(engineBall))
+        session = sessionmaker(bind=create_engine(engineBallRemout))
         self.session = session()
 
     def create_scrapy(self, name):

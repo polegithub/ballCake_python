@@ -234,16 +234,19 @@ class DoubanMovie(Base):
 
 
         #soup 使用findall之后不可再使用findall（因为findall的结果是resultset,不再是soup了）
-        recommendationsIngfo = soup_detail.find("div", attrs = {"class":"recommendations-bd"})
-        recommendations = recommendationsIngfo.find("dd")
-        recommendations_MovieInfo_list = []
-        if recommendations:
-             findAllList =recommendations.findAll("a")
+        recommendations = soup_detail.select("dd > a")
 
-        if findAllList:
+        # recommendationsIngfo = soup_detail.find("div", attrs = {"class":"recommendations-bd"})
+        # recommendations = recommendationsIngfo.find("dd")
+        recommendations_MovieInfo_list = []
+        # if recommendations:
+        #      findAllList =recommendations.findAll("a")
+        #
+        # if findAllList:
+        if recommendations:
             index =1
 
-            for movie_info_simple in findAllList:
+            for movie_info_simple in recommendations:
                 movieTitle = movie_info_simple.string.strip()
                 movieUrl = movie_info_simple.get('href')
                 movieIdNew = self.getMovieIdFromUrl(movieUrl)

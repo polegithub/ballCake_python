@@ -9,6 +9,6 @@ if __name__ == '__main__':
     #this py used for handle sqlalchemy,now just for create db
     e = create_engine(engineBallRemout)
     # e = create_engine(engineBallLocal)
-    Base.metadata.drop_all(e)
+    # Base.metadata.drop_all(e)
     Base.metadata.create_all(e)
 

@@ -184,12 +184,8 @@ class DoubanMovie(Base):
             type = "暂无"
 
         try:
-            ReleaseDate_lists = soup_detail.find("span",attrs = {"property":"v:initialReleaseDate"})
-            ReleaseDate_list = []
-            for i in range(0,len(ReleaseDate_lists)):
-                ReleaseDate = ReleaseDate_lists[i].string.strip()
-                ReleaseDate_list.append(ReleaseDate)
-            ReleaseDate = '/'.join(ReleaseDate_list)
+            ReleaseDate_list = soup_detail.find("span",attrs = {"property":"v:initialReleaseDate"})
+            ReleaseDate = ReleaseDate_list.string.strip()
         except:
             ReleaseDate = None
 
@@ -213,11 +209,11 @@ class DoubanMovie(Base):
                 dateFormat =datetime.datetime.strptime(dateAndRegion[0],'%Y-%m-%d')
                 dateInterval = time.mktime(dateFormat.timetuple())
 
-                region = dateAndRegion[1]
+                region = dateAndRegion[1].split(')')[0]
 
         movieId = self.getMovieIdFromUrl(url)
 
-        basicModel= [movieId,title,rating_num,vote_num,type,ReleaseDate,region,director,url]
+        basicModel= [movieId,title,rating_num,vote_num,type,dateFormat,region,director,url]
         self.insertMovieBasicModel(basicModel)
 
         percent = re.compile("\S\d%")

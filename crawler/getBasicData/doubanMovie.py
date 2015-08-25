@@ -34,7 +34,6 @@ class DoubanMovie(Base):
         movie_tag_lists = ['传记']
         print('start search list:%s' % (movie_tag_lists[0]))
 
-
         movie_lists = self.do_spider(movie_tag_lists)
         # self.print_movie_lists_excel(movie_lists,movie_tag_lists)
 
@@ -260,8 +259,7 @@ class DoubanMovie(Base):
                 index+=1
 
 
-        movie_model =[title,rating_num,vote_num,type,ReleaseDate,director,actor,stars5_percent,stars4_percent,stars3_percent,stars2_percent,stars1_percent, recommendations_MovieInfo_list]
-
+        movie_model = []
         return movie_model
 
     #比较通用的解析url的函数

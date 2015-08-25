@@ -188,7 +188,6 @@ class DoubanMovie(Base):
             #     ReleaseDate = ReleaseDate_lists[i].string.strip()
             #     ReleaseDate_list.append(ReleaseDate)
             # ReleaseDate = '/'.join(ReleaseDate_list)
->>>>>>> 33f5e17c4929bcc28f2b2fc74563766f44865491
         except:
             ReleaseDate = None
 

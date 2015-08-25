@@ -51,6 +51,7 @@ class MovieBasicInfo(Base):
     scoredCount = Column(Integer, nullable=True)
     movieType = Column(String(40,collation='utf8_unicode_ci'),nullable=True)
     releaseYear = Column(String(40,collation='utf8_unicode_ci'),nullable=True)
+    firstRegion = Column(String(40,collation='utf8_unicode_ci'),nullable=True)
     director = Column(String(40,collation='utf8_unicode_ci'),nullable=True)
     dou_url =  Column(String(100,collation='utf8_unicode_ci'),nullable=True)
 

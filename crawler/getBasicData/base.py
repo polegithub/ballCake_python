@@ -29,7 +29,8 @@ class Base:
 
 
     def currentTime(self):
-        return  time.strftime(ISOTIMEFORMAT, time.localtime())
+        timeCurrent = time.strftime("%Y-%m-%d %X", time.localtime())
+        return   timeCurrent
 
     #基本信息
     def insert_Moview_basic(self,movieId,movieName,score,scoredNum,type,year,firstRegion,director,url):

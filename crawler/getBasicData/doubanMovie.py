@@ -202,16 +202,17 @@ class DoubanMovie(Base):
         except:
             vote_num = 0
 
-        dateAndRegion = ''
         region =''
 
         if ReleaseDate:
             dateAndRegion = ReleaseDate.split('(')
-            if dateAndRegion:
-                dateFormat =datetime.datetime.strptime(dateAndRegion[0],'%Y-%m-%d')
+            if dateAndRegion[0]:
+                dateFormat = datetime.datetime.strptime(dateAndRegion[0],'%Y-%m-%d')
                 dateInterval = time.mktime(dateFormat.timetuple())
 
-                region = dateAndRegion[1].split(')')[0]
+                dateFormat = dateAndRegion[0]
+                if dateAndRegion[1]:
+                    region = dateAndRegion[1].split(')')[0]
 
         movieId = self.getMovieIdFromUrl(url)
 

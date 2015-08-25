@@ -31,11 +31,11 @@ class DoubanMovie(Base):
         #movie_tag_lists = ['经典','悬疑','青春','犯罪','惊悚','文艺','纪录片']
         #movie_tag_lists=['励志','搞笑','恐怖','战争','短片','魔幻','传记']
 
-        movie_tag_lists = ['搞笑']
+        movie_tag_lists = ['传记']
         print('start search list:%s' % (movie_tag_lists[0]))
 
         movie_lists = self.do_spider(movie_tag_lists)
-        self.print_movie_lists_excel(movie_lists,movie_tag_lists)
+        # self.print_movie_lists_excel(movie_lists,movie_tag_lists)
 
     def do_spider(self,movie_tag_lists):
         movie_lists=[]
@@ -60,7 +60,7 @@ class DoubanMovie(Base):
 
         print('start movie_spider')
 
-        while(page_num < 2):
+        while(1):
             url="http://www.douban.com/tag/"+urllib.quote(movie_tag)+"/movie?start="+str(page_num*15)
             print('start get url',url)
 
@@ -75,10 +75,6 @@ class DoubanMovie(Base):
 
             request = urllib2.Request(url,headers=hds[page_num%len(hds)])
             soup = self.getSoupWithUrl(request)
-
-            ##Previous Version, IP is easy to be Forbidden
-            #source_code = requests.get(url)
-            #plain_text = source_code.text
 
             list_soup = soup.find('div', {'class': 'mod movie-list'})
 
@@ -107,14 +103,10 @@ class DoubanMovie(Base):
 
                 # temp+=1
 
-
                 movie_model = self.getDetailModel(title,url,soup_detail)
 
                 movie_list.append(movie_model)
                 try_times=0 #set 0 when got valid information
-
-                #chenglong
-                break;
 
             page_num += 1
             print "Downloading Information From Page %d" % page_num
@@ -184,8 +176,19 @@ class DoubanMovie(Base):
             type = "暂无"
 
         try:
-            ReleaseDate_list = soup_detail.find("span",attrs = {"property":"v:initialReleaseDate"})
-            ReleaseDate = ReleaseDate_list.string.strip()
+            ReleaseDate_lists = soup_detail.find("span",attrs = {"property":"v:initialReleaseDate"})
+            if len(ReleaseDate_lists) > 1:
+                ReleaseDate = ReleaseDate_lists[0].string.strip()
+            else:
+                ReleaseDate = ReleaseDate_lists.string.strip()
+
+            #发布年份太多的，目前只取第一个值
+            # ReleaseDate_list = []
+            # for i in range(0,len(ReleaseDate_lists)):
+            #     ReleaseDate = ReleaseDate_lists[i].string.strip()
+            #     ReleaseDate_list.append(ReleaseDate)
+            # ReleaseDate = '/'.join(ReleaseDate_list)
+>>>>>>> 33f5e17c4929bcc28f2b2fc74563766f44865491
         except:
             ReleaseDate = None
 
@@ -218,11 +221,12 @@ class DoubanMovie(Base):
 
         percent = re.compile("\S\d%")
         stars_percent = soup_detail.find("div", attrs = {"class":"rating_wrap clearbox"}).findAll(text=percent)
-        stars5_percent = stars_percent[0].strip()
-        stars4_percent = stars_percent[1].strip()
-        stars3_percent = stars_percent[2].strip()
-        stars2_percent = stars_percent[3].strip()
-        stars1_percent = stars_percent[4].strip()
+        if stars_percent:
+            stars5_percent = stars_percent[0].strip()
+            stars4_percent = stars_percent[1].strip()
+            stars3_percent = stars_percent[2].strip()
+            stars2_percent = stars_percent[3].strip()
+            stars1_percent = stars_percent[4].strip()
 
         starsModel =[movieId,title,rating_num,vote_num,
                      stars5_percent,stars4_percent,stars3_percent,stars2_percent,stars1_percent]
@@ -230,15 +234,14 @@ class DoubanMovie(Base):
 
 
         #soup 使用findall之后不可再使用findall（因为findall的结果是resultset,不再是soup了）
-        recommendations = soup_detail.select("dd > a")
-
         # recommendationsIngfo = soup_detail.find("div", attrs = {"class":"recommendations-bd"})
         # recommendations = recommendationsIngfo.find("dd")
-        recommendations_MovieInfo_list = []
         # if recommendations:
         #      findAllList =recommendations.findAll("a")
-        #
         # if findAllList:
+        recommendations = soup_detail.select("dd > a")
+        recommendations_MovieInfo_list = []
+
         if recommendations:
             index =1
 

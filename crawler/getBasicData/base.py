@@ -28,6 +28,9 @@ class Base:
     #     return proxy
 
 
+    def currentTime(self):
+        return  time.strftime(ISOTIMEFORMAT, time.localtime())
+
     #基本信息
     def insert_Moview_basic(self,movieId,movieName,score,scoredNum,type,year,firstRegion,director,url):
 
@@ -36,7 +39,7 @@ class Base:
                 movieModel  = MovieBasicInfo(movieId = movieId,movieName = movieName,
                                              score =score,scoredNum =scoredNum,type =type,
                                              year = year,firstRegion = firstRegion,director=director,url=url,
-                                             create_time=int(time.time()), update_time=int(time.time()))
+                                             create_time=int(time.time()), update_time=self.currentTime())
                 self.session.add(movieModel)
                 self.session.commit()
 
@@ -55,7 +58,7 @@ class Base:
             if self.query_Movie_by_moviewId(movieId,index) is None:
                 movieModel  = MovieTagInfo(movieId = movieId,movieName = movieName,
                                            tag=tag,index= index,tagType = tagType,
-                                           create_time=int(time.time()), update_time=int(time.time()))
+                                           create_time=int(time.time()), update_time=self.currentTime())
                 self.session.add(movieModel)
                 self.session.commit()
 
@@ -68,7 +71,7 @@ class Base:
         movieNew = self.query_Movie_left_recommend_place(movieId,index)
         if movieNew is None:
             movieModel = RecommendationMovieInfo(movieId =movieId,recommendMovieId = moviewNewId,index = index,
-                                                 create_time=int(time.time()),update_time=int(time.time()))
+                                                 create_time=int(time.time()),update_time=self.currentTime())
             self.session.add(movieModel)
             self.session.commit()
 
@@ -83,11 +86,12 @@ class Base:
         if self.query_Movie_Score_by_movieId(movieId) is None:
             movieModel = MovieScoreInfo(movieId = movieId,movieName = movieName,totalScore= totalScore,totalNum=totalNum,FiveScore= FiveScore,FourScore=FourScore,
                                         ThreeScore= ThreeScore,TwoScore=TwoScore,OneScore=OneScore,
-                                        create_time=int(time.time()),update_time=int(time.time()))
+                                        create_time=int(time.time()),update_time=self.currentTime())
             self.session.add(movieModel)
             self.session.commit()
 
 
     def query_Movie_Score_by_movieId(self,movieId):
         return self.session.query(MovieScoreInfo).filter_by(movieId = movieId).first()
+
 

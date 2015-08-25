@@ -48,7 +48,7 @@ class DoubanMovie(Base):
 
 
     def movie_spider(self,movie_tag):
-        page_num=0
+        page_num=14
         count=1
         movie_list=[]
         try_times=0
@@ -203,12 +203,13 @@ class DoubanMovie(Base):
             vote_num = 0
 
         region =''
+        dateFormat = ''
 
         if ReleaseDate:
             dateAndRegion = ReleaseDate.split('(')
             if dateAndRegion[0]:
-                dateFormat = datetime.datetime.strptime(dateAndRegion[0],'%Y-%m-%d')
-                dateInterval = time.mktime(dateFormat.timetuple())
+                # dateFormat = datetime.datetime.strptime(dateAndRegion[0],'%Y-%m-%d')
+                # dateInterval = time.mktime(dateFormat.timetuple())
 
                 dateFormat = dateAndRegion[0]
                 if  len(dateAndRegion)>1:

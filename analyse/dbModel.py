@@ -23,10 +23,11 @@ class Booker(Base):
     publisher = Column(String(40,collation='utf8_unicode_ci'),nullable=True)
     publishTime =  Column(Integer)
     price =Column(String(40,collation='utf8_unicode_ci'),nullable=True)
-    create_time = Column(Integer, default=int(time.time()))
-    update_time = Column(Integer, default=int(time.time()))
 
-    def __init__(self,id,bookName,score,scoredNum,author,publisher,publishTime,price):
+    create_time = Column(Integer, default=int(time.time()))
+    update_time = Column(String(40,collation='utf8_unicode_ci'),nullable=True)
+
+    def __init__(self,bookName,score,scoredNum,author,publisher,publishTime,price):
         self.bookName = bookName
         self.score = score
         self.scoredNum = scoredNum
@@ -56,7 +57,7 @@ class MovieBasicInfo(Base):
     dou_url =  Column(String(100,collation='utf8_unicode_ci'),nullable=True)
 
     create_time = Column(Integer, default=int(time.time()))
-    update_time = Column(Integer, default=int(time.time()))
+    update_time = Column(String(40,collation='utf8_unicode_ci'),nullable=True)
 
     def __init__(self,movieId,movieName,score,scoredNum,type,year,firstRegion,director,url,create_time,update_time):
         self.movieName = movieName
@@ -87,7 +88,7 @@ class MovieTagInfo(Base):
     tagType = Column(Integer,nullable = False) # tag的类型，待定义
 
     create_time = Column(Integer, default=int(time.time()))
-    update_time = Column(Integer, default=int(time.time()))
+    update_time = Column(String(40,collation='utf8_unicode_ci'),nullable=True)
 
     def __init__(self,movieId,movieName,tag,index,type,
                  create_time,update_time):
@@ -116,7 +117,7 @@ class RecommendationMovieInfo(Base):
     index =Column(Integer, nullable=False)
 
     create_time = Column(Integer, default=int(time.time()))
-    update_time = Column(Integer, default=int(time.time()))
+    update_time = Column(String(40,collation='utf8_unicode_ci'),nullable=True)
 
     def __init__(self, movieId, recommendMovieId,index,create_time, update_time):
         self.movieId = movieId
@@ -149,7 +150,7 @@ class MovieScoreInfo(Base):
 
 
     create_time = Column(Integer, default=int(time.time()))
-    update_time = Column(Integer, default=int(time.time()))
+    update_time = Column(String(40,collation='utf8_unicode_ci'),nullable=True)
 
     def __init__(self, movieId, movieName, totalScore, totalNum, FiveScore, FourScore, ThreeScore, TwoScore, OneScore, create_time, update_time):
         self.movieId = movieId

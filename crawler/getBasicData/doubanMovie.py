@@ -34,6 +34,7 @@ class DoubanMovie(Base):
         movie_tag_lists = ['传记']
         print('start search list:%s' % (movie_tag_lists[0]))
 
+
         movie_lists = self.do_spider(movie_tag_lists)
         # self.print_movie_lists_excel(movie_lists,movie_tag_lists)
 
@@ -211,7 +212,7 @@ class DoubanMovie(Base):
                 dateInterval = time.mktime(dateFormat.timetuple())
 
                 dateFormat = dateAndRegion[0]
-                if dateAndRegion[1]:
+                if  len(dateAndRegion)>1:
                     region = dateAndRegion[1].split(')')[0]
 
         movieId = self.getMovieIdFromUrl(url)
@@ -221,16 +222,18 @@ class DoubanMovie(Base):
 
         percent = re.compile("\S\d%")
         stars_percent = soup_detail.find("div", attrs = {"class":"rating_wrap clearbox"}).findAll(text=percent)
-        if stars_percent:
+        if len(stars_percent)>4:
             stars5_percent = stars_percent[0].strip()
             stars4_percent = stars_percent[1].strip()
             stars3_percent = stars_percent[2].strip()
             stars2_percent = stars_percent[3].strip()
             stars1_percent = stars_percent[4].strip()
 
-        starsModel =[movieId,title,rating_num,vote_num,
-                     stars5_percent,stars4_percent,stars3_percent,stars2_percent,stars1_percent]
-        self.insertMovieScoreModel(starsModel)
+            starsModel =[movieId,title,rating_num,vote_num,
+                        stars5_percent,stars4_percent,stars3_percent,stars2_percent,stars1_percent]
+            print ('score:',starsModel)
+
+            self.insertMovieScoreModel(starsModel)
 
 
         #soup 使用findall之后不可再使用findall（因为findall的结果是resultset,不再是soup了）
@@ -298,7 +301,6 @@ class DoubanMovie(Base):
 
 
     def insertMovieScoreModel(self,model):
-        print ('score:',model,)
         self.insert_Movie_Score(movieId=model[0],movieName=model[1],totalScore=model[2],totalNum=model[3],
                                 FiveScore=model[4],FourScore=model[5],ThreeScore=model[6],TwoScore=model[7],
                                 OneScore=model[8])

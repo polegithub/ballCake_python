@@ -31,7 +31,7 @@ class DoubanMovie(Base):
         #movie_tag_lists = ['经典','悬疑','青春','犯罪','惊悚','文艺','纪录片']
         #movie_tag_lists=['励志','搞笑','恐怖','战争','短片','魔幻','传记']
 
-        movie_tag_lists = ['传记']
+        movie_tag_lists = ['纪录片']
         print('start search list:%s' % (movie_tag_lists[0]))
 
         movie_lists = self.do_spider(movie_tag_lists)
@@ -50,7 +50,7 @@ class DoubanMovie(Base):
 
 
     def movie_spider(self,movie_tag):
-        page_num=26
+        page_num=55
         count=1
         movie_list=[]
         try_times=0
@@ -78,7 +78,10 @@ class DoubanMovie(Base):
             request = urllib2.Request(url,headers=hds[page_num%len(hds)])
             soup = self.getSoupWithUrl(request)
 
-            list_soup = soup.find('div', {'class': 'mod movie-list'})
+            try:
+                list_soup = soup.find('div', {'class': 'mod movie-list'})
+            except:
+                list_soup = None
 
             try_times+=1
             if list_soup==None and try_times<200:
@@ -104,6 +107,7 @@ class DoubanMovie(Base):
                     # print('soup detail:',soup_detail)
 
                 # temp+=1
+
 
                 movie_model = self.getDetailModel(title,url,soup_detail)
 
@@ -273,7 +277,7 @@ class DoubanMovie(Base):
     #比较通用的解析url的函数
     def getSoupWithUrl(self,req):
         time.sleep(np.random.rand()*2)
-
+        plain_text_detail =0
         try:
             source_code_detail = urllib2.urlopen(req).read()
             plain_text_detail=str(source_code_detail)

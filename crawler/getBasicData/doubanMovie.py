@@ -41,14 +41,16 @@ class DoubanMovie(Base):
         movie_lists=[]
         for movie_tag in movie_tag_lists:
             movie_list = self.movie_spider(movie_tag)
-            if movie_list:
-                movie_list = sorted(movie_list,key=lambda x:x[1],reverse=True)
-                movie_lists.append(movie_list)
-        return movie_lists
+
+        #可能出现list index out of range，所以注释掉
+        #     if movie_list:
+        #         movie_list = sorted(movie_list,key=lambda x:x[1],reverse=True)
+        #         movie_lists.append(movie_list)
+        # return movie_lists
 
 
     def movie_spider(self,movie_tag):
-        page_num=14
+        page_num=26
         count=1
         movie_list=[]
         try_times=0
@@ -220,8 +222,13 @@ class DoubanMovie(Base):
         basicModel= [movieId,title,rating_num,vote_num,type,dateFormat,region,director,url]
         self.insertMovieBasicModel(basicModel)
 
-        percent = re.compile("\S\d%")
-        stars_percent = soup_detail.find("div", attrs = {"class":"rating_wrap clearbox"}).findAll(text=percent)
+        try:
+            percent = re.compile("\S\d%")
+            stars_percent = soup_detail.find("div", attrs = {"class":"rating_wrap clearbox"}).findAll(text=percent)
+        except:
+            stars_percent =[]
+
+
         if len(stars_percent)>4:
             stars5_percent = stars_percent[0].strip()
             stars4_percent = stars_percent[1].strip()
